@@ -1,0 +1,39 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:invoice_simple/core/theme/app_colors.dart';
+import 'package:invoice_simple/core/theme/app_text_styles.dart';
+
+class FilledTextButton extends StatelessWidget {
+  const FilledTextButton({
+    super.key, required this.text, this.onPressed,
+  });
+final String text ;
+ final VoidCallback? onPressed;
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+    
+      child: Padding(
+        padding: EdgeInsets.all(14.r),
+        child: ElevatedButton(
+          onPressed: onPressed,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.primary,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(6.r),
+            ),
+          ),
+          child: Text(
+            text,
+            textAlign: TextAlign.center,
+            style: AppTextStyles.moFont20BlackWh500.copyWith(
+              color: AppColors.white,
+              fontSize: 12.sp,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

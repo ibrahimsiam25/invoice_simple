@@ -12,6 +12,7 @@ import 'package:invoice_simple/features/dashboard/ui/cubit/invoice_dashboard_cub
 import 'package:invoice_simple/features/dashboard/ui/screens/new_invoice_view.dart';
 import 'package:invoice_simple/features/dashboard/ui/widgets/custom_filter_button.dart';
 import 'package:invoice_simple/features/dashboard/ui/widgets/custom_invoice_tile.dart';
+import 'package:invoice_simple/features/settings/ui/screens/settings_view.dart';
 import 'package:svg_flutter/svg_flutter.dart';
 
 class InvoiceDashboardViewBody extends StatelessWidget {
@@ -63,7 +64,9 @@ class InvoiceDashboardViewBody extends StatelessWidget {
                     ),
                     IconButton(
                       icon: SvgPicture.asset(Assets.imagesSvgSettings),
-                      onPressed: () {},
+                      onPressed: () {
+                        context.push(SettingsView.routeName);
+                      },
                     ),
                   ],
                 ),

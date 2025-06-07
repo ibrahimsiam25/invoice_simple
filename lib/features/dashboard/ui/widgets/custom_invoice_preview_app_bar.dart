@@ -23,7 +23,9 @@ class CustomInvoicePreviewAppBar extends StatelessWidget implements PreferredSiz
             children: [
     
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
                 child: Text( "Done",
                     style: AppTextStyles.poFont20BlackWh400.copyWith(
                       fontSize: 14.sp

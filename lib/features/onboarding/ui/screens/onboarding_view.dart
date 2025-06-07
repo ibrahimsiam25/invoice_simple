@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:confetti/confetti.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:invoice_simple/core/helpers/app_constants.dart';
+import 'package:invoice_simple/core/helpers/shared_pref_helper.dart';
 import 'package:invoice_simple/core/theme/app_colors.dart';
 import 'package:invoice_simple/core/theme/app_text_styles.dart';
 import 'package:invoice_simple/core/widgets/custom_scaffold.dart';
@@ -109,7 +111,10 @@ class _OnBoardingViewState extends State<OnBoardingView> {
                 const Spacer(),
 
                 FilledTextButton(
-                  onPressed: ()=>context.go(InvoiceDashboardView.routeName),
+                  onPressed: (){
+                    SharedPrefHelper.setData(AppConstants.prefsNotFirstLogin, true);
+                    context.go(InvoiceDashboardView.routeName);
+                  },
                   text: "Create New Invoice",
                 ),
 

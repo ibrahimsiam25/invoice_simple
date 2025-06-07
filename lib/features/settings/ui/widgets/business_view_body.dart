@@ -16,7 +16,7 @@ class BusinessViewBody extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       itemCount: users.length,
       separatorBuilder: (_, __) => const SizedBox(height: 12),
-      // مرر الموديل للودجت
+   
       itemBuilder: (context, index) => BusinessUser(
         user: users[index],
       ),

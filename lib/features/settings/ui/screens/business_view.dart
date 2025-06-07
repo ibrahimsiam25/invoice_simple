@@ -1,11 +1,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:invoice_simple/core/theme/app_colors.dart';
 import 'package:invoice_simple/core/widgets/cusotm_text_back_appbar.dart';
 import 'package:invoice_simple/core/widgets/custom_scaffold.dart';
 import 'package:invoice_simple/core/widgets/filled_text_button.dart';
 import 'package:invoice_simple/features/settings/data/model/business_user_model.dart';
+import 'package:invoice_simple/features/settings/ui/screens/add_new_business_view.dart';
 import 'package:invoice_simple/features/settings/ui/widgets/business_view_body.dart';
 
 
@@ -33,7 +35,9 @@ class BusinessView extends StatelessWidget {
        padding: EdgeInsets.only(bottom: 38.h, left: 24.w, right: 24.w),
        child: FilledTextButton(
           color: AppColors.blue,
-        text: "Add New", onPressed: () {}),
+        text: "Add New", onPressed: () {
+          context.push(AddNewBusinessView.routeName);
+        }),
      ),
       body: BusinessViewBody(users: users),
     );

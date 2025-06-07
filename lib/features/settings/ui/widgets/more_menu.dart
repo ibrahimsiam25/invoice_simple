@@ -8,10 +8,10 @@ class MoreMenu extends StatefulWidget {
   const MoreMenu({super.key, this.onDelete});
 
   @override
-  State<MoreMenu> createState() => MoreMenuState();
+  State<MoreMenu> createState() => _MoreMenuState();
 }
 
-class MoreMenuState extends State<MoreMenu> {
+class _MoreMenuState extends State<MoreMenu> {
   final LayerLink _layerLink = LayerLink();
   OverlayEntry? _overlayEntry;
 
@@ -26,49 +26,52 @@ class MoreMenuState extends State<MoreMenu> {
   }
 
   OverlayEntry _buildOverlayEntry() {
-    RenderBox renderBox = context.findRenderObject() as RenderBox;
-    final buttonPosition = renderBox.localToGlobal(Offset.zero);
-    final buttonSize = renderBox.size;
-
-    // The menu is positioned to the left of the icon, vertically centered with the icon.
     return OverlayEntry(
-      builder: (context) => Positioned(
-        top: buttonPosition.dy + buttonSize.height / 2 - 28, // half menu height for vertical centering
-        left: buttonPosition.dx - 150, // menu width + small margin
-        child: Material(
-          color: Colors.transparent,
-          child: GestureDetector(
-            behavior: HitTestBehavior.translucent,
-            onTap: _hideMenu,
-            child: Container(
-              decoration: BoxDecoration(
-                color: AppColors.white,
-                borderRadius: BorderRadius.circular(8.r),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.10),
-                    blurRadius: 16,
-                    offset: const Offset(0, 4),
+      builder: (context) => GestureDetector(
+        onTap: _hideMenu,
+        behavior: HitTestBehavior.translucent,
+        child: Stack(
+          children: [
+            // this follower positions relative to the IconButton
+            CompositedTransformFollower(
+              link: _layerLink,
+              offset: const Offset(-160, -8), // adjust as needed
+              showWhenUnlinked: false,
+              child: Material(
+                color: Colors.transparent,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.circular(8.r),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.10),
+                        blurRadius: 16,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Delete account',
-                    style: AppTextStyles.poFont20BlackWh400.copyWith(
-                      fontSize: 12.sp,
-                      color: AppColors.red,
+                  child: IntrinsicWidth( // makes width fit content
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Delete account',
+                          style: AppTextStyles.poFont20BlackWh400.copyWith(
+                            fontSize: 12.sp,
+                            color: AppColors.red,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Icon(Icons.delete, color: AppColors.red, size: 20.sp),
+                      ],
                     ),
                   ),
-                  const SizedBox(width: 8),
-               Icon(Icons.delete, color: AppColors.red, size: 20.sp),
-                ],
+                ),
               ),
             ),
-          ),
+          ],
         ),
       ),
     );

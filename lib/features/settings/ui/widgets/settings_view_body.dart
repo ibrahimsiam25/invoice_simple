@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:invoice_simple/core/helpers/app_constants.dart';
 import 'package:invoice_simple/core/theme/app_colors.dart';
+import 'package:invoice_simple/features/settings/ui/screens/business_view.dart';
+import 'package:invoice_simple/features/settings/ui/widgets/business_user.dart';
 import 'package:invoice_simple/features/settings/ui/widgets/settings_tile.dart';
 
 class SettingsViewBody extends StatelessWidget {
@@ -20,11 +23,13 @@ class SettingsViewBody extends StatelessWidget {
               left: 26.w, right: 26.w, top: 75.h, bottom: 12.h), 
           decoration: BoxDecoration(
             color: AppColors.white,
-            borderRadius: BorderRadius.circular(10), // أكثر تقوس مثل الصورة
+            borderRadius: BorderRadius.circular(10), 
           ),
           child: Column(
             children: [
-              SettingsTile(title: "Business Information", onTap: () {}),
+              SettingsTile(title: "Business Information", onTap: () {
+                context.push(BusinessView.routeName);
+              }),
               SettingsTile(title: "Clients", onTap: () {}),
               SettingsTile(title: "Items", onTap: () {}),
               SettingsTile(isHaveIcon: false,title: "Privacy", onTap: () {}),

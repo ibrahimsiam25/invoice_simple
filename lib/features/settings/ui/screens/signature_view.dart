@@ -48,7 +48,8 @@ class SignatureView extends StatelessWidget {
                  if (controller.isNotEmpty) {
                     // Use the signature bytes as needed, e.g., save to storage or database
                     final signature = await controller.toPngBytes();
-                     print(signature);
+                    Navigator.pop(context);
+                    print(signature);
                   }
               },
               text: "Save")

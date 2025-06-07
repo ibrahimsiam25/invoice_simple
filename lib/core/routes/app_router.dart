@@ -1,5 +1,6 @@
 
 import 'package:go_router/go_router.dart';
+import 'package:invoice_simple/features/dashboard/ui/screens/inoice_preview_view.dart';
 import 'package:invoice_simple/features/dashboard/ui/screens/invoice_dashboard_view.dart';
 import 'package:invoice_simple/features/dashboard/ui/screens/new_invoice_view.dart';
 import 'package:invoice_simple/features/onboarding/ui/screens/onboarding_view.dart';
@@ -8,7 +9,7 @@ import 'package:invoice_simple/features/onboarding/ui/screens/onboarding_view.da
 abstract class AppRouter {
   static GoRouter getRouter(bool isFirstLogin) {
     return GoRouter(
-      initialLocation: NewInvoiceView.routeName,
+      initialLocation:InvoicePreviewView.routeName,
       routes: [
         GoRoute(
           path: OnBoardingView.routeName,
@@ -21,6 +22,10 @@ abstract class AppRouter {
         GoRoute(
           path: NewInvoiceView.routeName,
           builder: (context, state) => const NewInvoiceView(),
+        ),
+        GoRoute(
+          path: InvoicePreviewView.routeName,
+          builder: (context, state) => const InvoicePreviewView(),
         ),
       ],
     );

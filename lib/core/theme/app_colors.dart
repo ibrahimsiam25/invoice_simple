@@ -18,5 +18,9 @@ class AppColors {
   static const Color extraLightGrey = Color(0xFFF2F2F2);
   static const Color red = Color(0xFFFF6464);
   static const Color blue = Color(0xFF94A3B8);
+  static const Color lightBlue = Color(0xFF8E8E93);
+  static const Color extraLightGreyFont = Color(0xFFc4c4c7);
+  static const Color extraLightGreyDivder = Color(0xFFc5c5c6);
+  static const Color blueAccent = Color(0xFF007AFF);
 }
- 
+   

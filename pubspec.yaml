@@ -11,6 +11,7 @@ environment:
 dependencies:
   confetti: ^0.8.0
   cupertino_icons: ^1.0.8
+  dotted_border: ^2.1.0
   flutter:
     sdk: flutter
   flutter_bloc: ^9.0.0
@@ -18,6 +19,7 @@ dependencies:
   flutter_screenutil: ^5.9.3
   get_it: ^8.0.3
   go_router: ^15.1.2
+  image_picker: ^1.1.2
   shared_preferences: ^2.5.3
   svg_flutter: ^0.0.1
 dev_dependencies:

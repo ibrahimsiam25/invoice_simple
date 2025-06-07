@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:confetti/confetti.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:invoice_simple/core/theme/app_colors.dart';
 import 'package:invoice_simple/core/theme/app_text_styles.dart';
 import 'package:invoice_simple/core/widgets/custom_scaffold.dart';
 import 'package:invoice_simple/core/widgets/filled_text_button.dart';
+import 'package:invoice_simple/features/dashboard/ui/screens/invoice_dashboard_view.dart';
 
 class OnBoardingView extends StatefulWidget {
   const OnBoardingView({super.key});
@@ -33,9 +35,6 @@ class _OnBoardingViewState extends State<OnBoardingView> {
 
   @override
   Widget build(BuildContext context) {
-    
-
-
     return CustomScaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -66,13 +65,13 @@ class _OnBoardingViewState extends State<OnBoardingView> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(height:186.h),
+                SizedBox(height: 186.h),
                 Text(
                   "Welcome to the world of lightning-fast invocing",
                   textAlign: TextAlign.start,
-                  
+
                   style: AppTextStyles.moFont20BlackWh500.copyWith(
-                    color: AppColors.darkTextColor
+                    color: AppColors.darkTextColor,
                   ),
                 ),
 
@@ -83,7 +82,7 @@ class _OnBoardingViewState extends State<OnBoardingView> {
                   text: TextSpan(
                     style: AppTextStyles.moFont20BlackWh500.copyWith(
                       fontSize: 14.sp,
-                       color: AppColors.darkTextColor
+                      color: AppColors.darkTextColor,
                     ),
                     children: [
                       const TextSpan(text: "Create up to "),
@@ -110,10 +109,9 @@ class _OnBoardingViewState extends State<OnBoardingView> {
                 const Spacer(),
 
                 FilledTextButton(
-                  onPressed: () {
-                   
-                  },
-                  text: "Create New Invoice"),
+                  onPressed: ()=>context.go(InvoiceDashboardView.routeName),
+                  text: "Create New Invoice",
+                ),
 
                 SizedBox(height: 68.h),
               ],

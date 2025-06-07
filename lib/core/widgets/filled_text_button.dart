@@ -14,8 +14,7 @@ final String text ;
     return SizedBox(
       width: double.infinity,
     
-      child: Padding(
-        padding: EdgeInsets.all(14.r),
+     
         child: ElevatedButton(
           onPressed: onPressed,
           style: ElevatedButton.styleFrom(
@@ -23,6 +22,7 @@ final String text ;
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(6.r),
             ),
+               padding: EdgeInsets.all(14.r),
           ),
           child: Text(
             text,
@@ -33,7 +33,7 @@ final String text ;
             ),
           ),
         ),
-      ),
-    );
+      )
+    ;
   }
 }

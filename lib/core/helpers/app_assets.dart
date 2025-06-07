@@ -13,5 +13,9 @@ class Assets {
   /// Assets for imagesSvgSettings
   /// assets/images/svg/settings.svg
   static const String imagesSvgSettings = "assets/images/svg/settings.svg";
+
+  /// Assets for imagesSvgStar
+  /// assets/images/svg/Star.svg
+  static const String imagesSvgStar = "assets/images/svg/Star.svg";
 }
 

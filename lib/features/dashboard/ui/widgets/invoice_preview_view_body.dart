@@ -101,7 +101,7 @@ class InvoicePreviewViewBody extends StatelessWidget {
               SizedBox(height: 5.h),
     
               InvoiceTableRow(
-                backgroundColor: AppColors.lightGrey,
+                backgroundColor: AppColors.extraLightGrey,
                 height: 44,
                 children: [
                   Align(

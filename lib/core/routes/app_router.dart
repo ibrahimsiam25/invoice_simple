@@ -4,6 +4,7 @@ import 'package:invoice_simple/features/dashboard/ui/screens/inoice_preview_view
 import 'package:invoice_simple/features/dashboard/ui/screens/invoice_dashboard_view.dart';
 import 'package:invoice_simple/features/dashboard/ui/screens/new_invoice_view.dart';
 import 'package:invoice_simple/features/onboarding/ui/screens/onboarding_view.dart';
+import 'package:invoice_simple/features/settings/ui/screens/add_item_view.dart';
 import 'package:invoice_simple/features/settings/ui/screens/add_new_business_view.dart';
 import 'package:invoice_simple/features/settings/ui/screens/business_view.dart';
 import 'package:invoice_simple/features/settings/ui/screens/settings_view.dart';
@@ -13,10 +14,10 @@ import 'package:invoice_simple/features/settings/ui/screens/signature_view.dart'
 abstract class AppRouter {
   static GoRouter getRouter(bool isNotFirstLogin) {
     return GoRouter(
-      initialLocation: 
-       isNotFirstLogin
-          ? InvoiceDashboardView.routeName
-          : OnBoardingView.routeName,
+      initialLocation:  AddItemView.routeName,
+      //  isNotFirstLogin
+      //     ? InvoiceDashboardView.routeName
+      //     : OnBoardingView.routeName,
       routes: [
         GoRoute(
           path: OnBoardingView.routeName,
@@ -50,6 +51,10 @@ abstract class AppRouter {
         GoRoute(
           path: SignatureView.routeName,
           builder: (context, state) => const SignatureView(),
+        ),
+        GoRoute(
+          path: AddItemView.routeName,
+          builder: (context, state) => const AddItemView(),
         ),
       ],
     );

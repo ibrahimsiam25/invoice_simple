@@ -1,0 +1,355 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:invoice_simple/core/theme/app_colors.dart';
+import 'package:invoice_simple/core/theme/app_text_styles.dart';
+import 'package:invoice_simple/core/widgets/filled_text_button.dart';
+import 'package:invoice_simple/features/settings/ui/widgets/custom_switch_button.dart';
+import 'package:invoice_simple/features/settings/ui/widgets/divider.dart';
+
+class NewItemBottomSheet extends StatefulWidget {
+  const NewItemBottomSheet({super.key});
+
+  @override
+  State<NewItemBottomSheet> createState() => _NewItemBottomSheetState();
+}
+
+class _NewItemBottomSheetState extends State<NewItemBottomSheet> {
+  bool saveToCatalog = false;
+  bool discountActive = false;
+  bool taxable = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Container(
+        decoration: const BoxDecoration(
+          color: AppColors.background,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 23, vertical: 10),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Top bar
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Cancel",
+                  style: AppTextStyles.poFont20BlackWh400.copyWith(
+                    fontSize: 14.sp,
+                  ),
+                ),
+
+                Text(
+                  "Done",
+                  style: AppTextStyles.poFont20BlackWh600.copyWith(
+                    fontSize: 14.sp,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 35.h),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "New Item",
+                style: AppTextStyles.poFont20BlackWh600.copyWith(
+                  fontSize: 26.sp,
+                ),
+              ),
+            ),
+            SizedBox(height: 23.h),
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5.r),
+                color: AppColors.white,
+              ),
+              child: Column(
+                children: [
+                  TextField(
+                    style: AppTextStyles.poFont20BlackWh400.copyWith(
+                      color: AppColors.blueAccent,
+                      fontSize: 13,
+                    ),
+                    cursorColor: AppColors.blueAccent,
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 12,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide.none,
+                      ),
+                      filled: true,
+                      fillColor: AppColors.white,
+                      hintText: 'Bill To',
+                      hintStyle: AppTextStyles.poFont20BlackWh400.copyWith(
+                        fontSize: 13,
+                        color: AppColors.extraLightGreyFont,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    child: CustomDivider(),
+                  ),
+                  TextField(
+                    style: AppTextStyles.poFont20BlackWh400.copyWith(
+                      color: AppColors.blueAccent,
+                      fontSize: 13,
+                    ),
+                    cursorColor: AppColors.blueAccent,
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 12,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide.none,
+                      ),
+                      filled: true,
+                      fillColor: AppColors.white,
+                      hintText: 'Details (e. g. Completed on 1/12)',
+                      hintStyle: AppTextStyles.poFont20BlackWh400.copyWith(
+                        fontSize: 13,
+                        color: AppColors.extraLightGreyFont,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 12),
+            // Save to catalog
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Save to Items catalog",
+                  style: AppTextStyles.poFont20BlackWh400.copyWith(
+                    fontSize: 12.sp,
+                    color: AppColors.blueGrey,
+                  ),
+                ),
+
+                CustomSwitchButton(
+                  value: saveToCatalog,
+                  onChanged: (val) {
+                    setState(() {
+                      saveToCatalog = val;
+                    });
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            // Unit table header
+            Column(
+              children: [
+                // Table header
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 6,
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          "Unit Price",
+                          style: AppTextStyles.poFont20BlackWh400.copyWith(
+                            fontSize: 12,
+                            color: AppColors.blueGrey,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          "Quantity",
+                          style: AppTextStyles.poFont20BlackWh400.copyWith(
+                            fontSize: 12,
+                            color: AppColors.blueGrey,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          "Unit Type",
+                          style: AppTextStyles.poFont20BlackWh400.copyWith(
+                            fontSize: 12,
+                            color: AppColors.blueGrey,
+                          ),
+                          textAlign: TextAlign.right,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                // Table row
+                Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 5,
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: TextField(
+                          decoration: InputDecoration(
+                            isDense: true,
+                            border: InputBorder.none,
+                            prefixText: "\$ ",
+                            hintText: "0",
+                            hintStyle: AppTextStyles.poFont20BlackWh400
+                                .copyWith(fontSize: 12.sp),
+                          ),
+                          style: AppTextStyles.poFont20BlackWh400.copyWith(
+                            fontSize: 13,
+                          ),
+                          keyboardType: TextInputType.number,
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Center(
+                          child: TextField(
+                            decoration: InputDecoration(
+                              isDense: true,
+                              border: InputBorder.none,
+                              hintText: "1",
+                              hintStyle: AppTextStyles.poFont20BlackWh400
+                                  .copyWith(fontSize: 12.sp),
+                            ),
+                            style: AppTextStyles.poFont20BlackWh400.copyWith(
+                              fontSize: 13,
+                            ),
+                            keyboardType: TextInputType.number,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 5,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.white,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(
+                              "Optional",
+                              style: AppTextStyles.poFont20BlackWh400.copyWith(
+                                fontSize: 12.sp,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Text(
+                  "Discount",
+                  style: AppTextStyles.poFont20BlackWh400.copyWith(
+                    fontSize: 12.sp,
+                    color: AppColors.blueGrey,
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                color: AppColors.white,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: TextField(
+                      decoration: InputDecoration(
+                        isDense: true,
+                        border: InputBorder.none,
+
+                        hintText: "0",
+                        hintStyle: AppTextStyles.poFont20BlackWh400.copyWith(
+                          fontSize: 12.sp,
+                        ),
+                      ),
+                      style: AppTextStyles.poFont20BlackWh400.copyWith(
+                        fontSize: 13,
+                      ),
+                      keyboardType: TextInputType.number,
+                    ),
+                  ),
+                  CustomSwitchButton(
+                    value: discountActive,
+                    onChanged: (val) {
+                      setState(() {
+                        discountActive = val;
+                      });
+                    },
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 32.h),
+            // Taxable row
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Taxable?",
+                  style: AppTextStyles.poFont20BlackWh400.copyWith(
+                    fontSize: 12.sp,
+                    color: AppColors.blueGrey,
+                  ),
+                ),
+                CustomSwitchButton(
+                  value: taxable,
+                  onChanged: (val) {
+                    setState(() {
+                      taxable = val;
+                    });
+                  },
+                ),
+              ],
+            ),
+            SizedBox(height: 100.h),
+            FilledTextButton(
+              color: AppColors.blue,
+              text: 'Add Item',
+              onPressed: () {},
+            ),
+            SizedBox(height: 38.h),
+          ],
+        ),
+      ),
+    );
+  }
+}

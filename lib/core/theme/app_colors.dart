@@ -22,5 +22,7 @@ class AppColors {
   static const Color extraLightGreyFont = Color(0xFFc4c4c7);
   static const Color extraLightGreyDivder = Color(0xFFc5c5c6);
   static const Color blueAccent = Color(0xFF007AFF);
+  static const Color greyLight2 = Color(0xFFe7e7e8);
+  static const Color greyDark2 = Color(0xFF808085);
 }
    

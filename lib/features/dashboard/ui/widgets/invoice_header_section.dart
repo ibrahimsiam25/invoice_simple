@@ -1,0 +1,312 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:invoice_simple/core/helpers/app_constants.dart';
+import 'package:invoice_simple/core/theme/app_colors.dart';
+import 'package:invoice_simple/core/theme/app_text_styles.dart';
+
+enum PaymentMethod { cash, check, bank, paypal }
+
+class InvoiceHeaderSection extends StatelessWidget {
+  final bool isPaid;
+  final PaymentMethod? paymentMethod;
+  final double amount;
+
+  const InvoiceHeaderSection({
+    super.key,
+    required this.isPaid,
+    this.paymentMethod,
+    required this.amount,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    // اسم وسيلة الدفع للعرض
+    String paymentMethodText() {
+      switch (paymentMethod) {
+        case PaymentMethod.cash:
+          return "Cash";
+        case PaymentMethod.check:
+          return "Check";
+        case PaymentMethod.bank:
+          return "Bank";
+        case PaymentMethod.paypal:
+          return "PayPal";
+        default:
+          return "";
+      }
+    }
+
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: AppConstants.paddingHorizontal),
+      child: Center(
+        child: SizedBox(
+          width: double.infinity,
+          height: 250,
+          child: Stack(
+            clipBehavior: Clip.none,
+            alignment: Alignment.topCenter,
+            children: [
+              Positioned(
+                top: 0,
+                left: 10,
+                right: 10,
+                child: SizedBox(
+                  height: 150,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 50.w),
+                    child: Material(
+                      borderRadius: BorderRadius.circular(10),
+                      elevation: 3,
+                      color: AppColors.white,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 18,
+                          vertical: 14,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: AppColors.white,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Yulia Kartavenko',
+                                      style: AppTextStyles.poFont20BlackWh600
+                                          .copyWith(fontSize: 10.sp),
+                                    ),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      '',
+                                      style: AppTextStyles.poFont20BlackWh400
+                                          .copyWith(
+                                            fontSize: 8.sp,
+                                            color: AppColors.blueGrey,
+                                          ),
+                                    ),
+                                    Text(
+                                      '',
+                                      style: AppTextStyles.poFont20BlackWh400
+                                          .copyWith(
+                                            fontSize: 8.sp,
+                                            color: AppColors.blueGrey,
+                                          ),
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      'INVOICE',
+                                      style: AppTextStyles.poFont20BlackWh600
+                                          .copyWith(fontSize: 10.sp),
+                                    ),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      '#001',
+                                      style: AppTextStyles.poFont20BlackWh400
+                                          .copyWith(
+                                            fontSize: 8.sp,
+                                            color: AppColors.blueGrey,
+                                          ),
+                                    ),
+                                    Text(
+                                      'Issued 05/05/2025',
+                                      style: AppTextStyles.poFont20BlackWh400
+                                          .copyWith(
+                                            fontSize: 8.sp,
+                                            color: AppColors.blueGrey,
+                                          ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 8),
+
+                            // الصف الثاني (BILL TO)
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "FROM",
+                                  style: AppTextStyles.poFont20BlackWh600
+                                      .copyWith(fontSize: 10.sp),
+                                ),
+                                const Spacer(),
+                                Text(
+                                  "BILL TO",
+                                  style: AppTextStyles.poFont20BlackWh600
+                                      .copyWith(fontSize: 10.sp),
+                                ),
+                                const SizedBox(width: 16),
+                                Text(
+                                  "Ivan Ivanov",
+                                  style: AppTextStyles.poFont20BlackWh600
+                                      .copyWith(fontSize: 10.sp),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 90,
+                left: 0,
+                right: 0,
+                child: Container(
+                  height: 160,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 13,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.06),
+                        blurRadius: 18,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child:
+                      isPaid && paymentMethod != null
+                          ? Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  // زر Paid
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 14,
+                                      vertical: 4,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.primary, // برتقالي
+                                      borderRadius: BorderRadius.circular(7),
+                                    ),
+                                    child: Text(
+                                      "Paid",
+                                      style: AppTextStyles.poFont20BlackWh400
+                                          .copyWith(
+                                            color: AppColors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 12.sp,
+                                          ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  // زر وسيلة الدفع
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 14,
+                                      vertical: 4,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.blueGrey.withOpacity(
+                                        0.5,
+                                      ),
+                                      borderRadius: BorderRadius.circular(7),
+                                    ),
+                                    child: Text(
+                                      paymentMethodText(),
+                                      style: AppTextStyles.poFont20BlackWh400
+                                          .copyWith(
+                                            color: AppColors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 12.sp,
+                                          ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                "Jul", // يمكنك حساب الشهر الحالي أو من تاريخ الدفع
+                                style: AppTextStyles.poFont20BlackWh400
+                                    .copyWith(
+                                      color: AppColors.blueGrey,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16.sp,
+                                    ),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                "${amount.toStringAsFixed(2)} \$",
+                                style: TextStyle(
+                                  color: AppColors.black,
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          )
+                          : Column(
+                            children: [
+                              Text(
+                                'Edit to add client',
+                                style: AppTextStyles.poFont20BlackWh400
+                                    .copyWith(
+                                      fontSize: 16.sp,
+                                      color: AppColors.blueGrey,
+                                    ),
+                                textAlign: TextAlign.center,
+                              ),
+                              SizedBox(height: 7.h),
+                              Text(
+                                '${amount.toStringAsFixed(2)} \$',
+                                style: AppTextStyles.poFont20BlackWh600
+                                    .copyWith(fontSize: 28.sp),
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 14),
+                              OutlinedButton(
+                                style: OutlinedButton.styleFrom(
+                                  side: BorderSide(
+                                    color: AppColors.extraLightGreyDivder,
+                                    width: 1.5,
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 5,
+                                    horizontal: 15,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  foregroundColor: AppColors.black,
+                                ),
+                                onPressed: () {},
+                                child: Text(
+                                  '+ Add Receivesd Payment',
+                                  style: AppTextStyles.poFont20BlackWh400
+                                      .copyWith(
+                                        fontSize: 14.sp,
+                                        color: AppColors.black,
+                                      ),
+                                ),
+                              ),
+                            ],
+                          ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

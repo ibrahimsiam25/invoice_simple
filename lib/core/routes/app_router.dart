@@ -2,6 +2,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:invoice_simple/features/dashboard/ui/screens/inoice_preview_view.dart';
 import 'package:invoice_simple/features/dashboard/ui/screens/invoice_dashboard_view.dart';
+import 'package:invoice_simple/features/dashboard/ui/screens/invoice_details_view.dart';
 import 'package:invoice_simple/features/dashboard/ui/screens/new_invoice_view.dart';
 import 'package:invoice_simple/features/onboarding/ui/screens/onboarding_view.dart';
 import 'package:invoice_simple/features/settings/ui/screens/add_clients_view.dart';
@@ -15,7 +16,7 @@ import 'package:invoice_simple/features/settings/ui/screens/signature_view.dart'
 abstract class AppRouter {
   static GoRouter getRouter(bool isNotFirstLogin) {
     return GoRouter(
-      initialLocation: AddNewBusinessView.routeName,
+      initialLocation: InvoiceDetailsView.routeName,
       //  isNotFirstLogin
       //     ? InvoiceDashboardView.routeName
       //     : OnBoardingView.routeName,
@@ -35,6 +36,10 @@ abstract class AppRouter {
         GoRoute(
           path: InvoicePreviewView.routeName,
           builder: (context, state) => const InvoicePreviewView(),
+        ),
+        GoRoute(
+          path: InvoiceDetailsView.routeName,
+          builder: (context, state) => const InvoiceDetailsView(),
         ),
         //ToDo: -----------------Settings View-----------------
         GoRoute(

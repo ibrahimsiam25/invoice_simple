@@ -20,9 +20,10 @@ class BusinessView extends StatelessWidget {
     final users = List.generate(
       40,
 
-      (index) => const BusinessUserModel(
+      (index) =>  BusinessUserModel(
         name: "John Doe",
         email: "yourmail@sample.com",
+        currency: "USD",
       ),
     );
 

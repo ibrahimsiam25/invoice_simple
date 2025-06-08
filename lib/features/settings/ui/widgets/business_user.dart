@@ -41,12 +41,12 @@ class BusinessUser extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  user.name,
+                  user.name??"",
                   style: AppTextStyles.poFont20BlackWh600.copyWith(fontSize: 14),
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  user.email,
+                  user.email??"",
                   style: AppTextStyles.poFont20BlackWh400.copyWith(
                     fontSize: 12,
                     decoration: TextDecoration.underline,

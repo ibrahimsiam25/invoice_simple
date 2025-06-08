@@ -1,3 +1,7 @@
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:path_provider/path_provider.dart';
+
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,9 +14,10 @@ import 'package:signature/signature.dart';
 
 
 class SignatureView extends StatelessWidget {
-  const SignatureView({super.key});
+  const SignatureView({super.key, required this.onSaved});
   static const String routeName = '/signatureView';
 
+  final Function(String path) onSaved;
   @override
   Widget build(BuildContext context) {
     final SignatureController controller = SignatureController(
@@ -45,12 +50,18 @@ class SignatureView extends StatelessWidget {
             SizedBox(height: 12.h,),
             FilledTextButton(
               onPressed: () async{
-                 if (controller.isNotEmpty) {
-                    // Use the signature bytes as needed, e.g., save to storage or database
-                    final signature = await controller.toPngBytes();
+                   if (controller.isNotEmpty) {
+                  final Uint8List? signature = await controller.toPngBytes();
+                  if (signature != null) {
+                    final dir = await getApplicationDocumentsDirectory();
+                    final filePath = '${dir.path}/signature_${DateTime.now().millisecondsSinceEpoch}.png';
+                    final file = File(filePath);
+                    await file.writeAsBytes(signature);
+
+                    onSaved(filePath); // callback
                     Navigator.pop(context);
-                    print(signature);
                   }
+                }
               },
               text: "Save")
             ],
@@ -60,3 +71,9 @@ class SignatureView extends StatelessWidget {
     );
   }
 }
+
+
+
+
+
+

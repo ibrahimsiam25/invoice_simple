@@ -1,13 +1,32 @@
-class BusinessUserModel {
+
+import 'package:hive/hive.dart';
+
+part 'business_user_model.g.dart';
+
+@HiveType(typeId: 0)
+class BusinessUserModel extends HiveObject {
+  @HiveField(0)
   final String name;
-  final String email;
+  @HiveField(1)
+  final String? phone;
+  @HiveField(2)
+  final String? email;
+  @HiveField(3)
+  final String? address;
+  @HiveField(4)
+  final String currency;
+  @HiveField(5)
+  final String? imageLogo;
+  @HiveField(6)
+  final String? imageSignature;
 
-  // يمكنك إضافة صورة أو بيانات أخرى لاحقاً إذا أردت
-  // final String? imagePath;
-
-  const BusinessUserModel({
+  BusinessUserModel({
     required this.name,
-    required this.email,
-    // this.imagePath,
+    this.phone,
+    this.email,
+    this.address,
+    required this.currency,
+    this.imageLogo,
+    this.imageSignature,
   });
 }

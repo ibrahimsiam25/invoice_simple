@@ -10,7 +10,9 @@ import 'package:invoice_simple/core/theme/app_text_styles.dart';
 import 'package:svg_flutter/svg.dart';
 
 class AddLogoWidget extends StatefulWidget {
-  const AddLogoWidget({super.key});
+  final void Function(File image)? onImageSelected;
+
+  const AddLogoWidget({super.key, this.onImageSelected});
 
   @override
   State<AddLogoWidget> createState() => _AddLogoWidgetState();
@@ -28,36 +30,35 @@ class _AddLogoWidgetState extends State<AddLogoWidget> {
           setState(() {
             _selectedImage = image;
           });
+          widget.onImageSelected?.call(image); 
         }
       },
       child: Container(
         height: 120.h,
-
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(color: AppColors.white),
         child: DottedBorder(
           borderType: BorderType.RRect,
-          radius: Radius.circular(5),
+          radius: const Radius.circular(5),
           color: AppColors.lightBlue,
           dashPattern: const [4, 4],
           strokeWidth: 2,
           child: Center(
-            child:
-                _selectedImage == null
-                    ? Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SvgPicture.asset(Assets.imagesSvgAddImage),
-                        Text(
-                          'Add Logo',
-                          style: AppTextStyles.poFont20BlackWh400.copyWith(
-                            color: AppColors.lightBlue,
-                            fontSize: 12,
-                          ),
+            child: _selectedImage == null
+                ? Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SvgPicture.asset(Assets.imagesSvgAddImage),
+                      Text(
+                        'Add Logo',
+                        style: AppTextStyles.poFont20BlackWh400.copyWith(
+                          color: AppColors.lightBlue,
+                          fontSize: 12,
                         ),
-                      ],
-                    )
-                    : Image.file(_selectedImage!, height: 50),
+                      ),
+                    ],
+                  )
+                : Image.file(_selectedImage!, height: 50),
           ),
         ),
       ),

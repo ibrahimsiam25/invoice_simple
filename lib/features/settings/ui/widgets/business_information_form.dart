@@ -7,20 +7,19 @@ import 'package:invoice_simple/features/settings/ui/widgets/currency_field.dart'
 import 'package:invoice_simple/features/settings/ui/widgets/labeled_text_field.dart';
 
 class BusinessInformationForm extends StatelessWidget {
-  final TextEditingController nameController;
-  final TextEditingController phoneController;
-  final TextEditingController emailController;
-  final TextEditingController addressController;
- 
+  final void Function(String?) onChangedName;
+  final void Function(String?) onChangedPhone;
+  final void Function(String?) onChangedEmail;
+  final void Function(String?) onChangedAddress;
 
-  final void Function(String?)? onCurrencyChanged;
+  final void Function(CurrencyModel?) onCurrencyChanged;
 
   const BusinessInformationForm({
     super.key,
-    required this.nameController,
-    required this.phoneController,
-    required this.emailController,
-    required this.addressController,
+    required this.onChangedName,
+    required this.onChangedPhone,
+    required this.onChangedEmail,
+    required this.onChangedAddress,
 
     
     required this.onCurrencyChanged,
@@ -68,36 +67,34 @@ final currencies = [
             children: [
               LabeledTextField(
                 label: 'Name',
-                controller: nameController,
+                onChanged: onChangedName,
                 hintText: 'Optional',
               ),
               Divider(),
               LabeledTextField(
                 label: 'Phone',
-                controller: phoneController,
+                onChanged: onChangedPhone,
                 hintText: 'Optional',
                 keyboardType: TextInputType.phone,
               ),
               Divider(),
               LabeledTextField(
                 label: 'E-Mail',
-                controller: emailController,
+                onChanged: onChangedEmail,
                 hintText: 'Optional',
                 keyboardType: TextInputType.emailAddress,
               ),
               Divider(),
               LabeledTextField(
                 label: 'Address',
-                controller: addressController,
+                onChanged: onChangedAddress,
                 hintText: 'Optional',
               ),
               Divider(),
              CurrencyField(
   label: "Currency",
   items: currencies,
-  onChanged: (currency) {
-
-  },
+  onChanged: onCurrencyChanged,
 )
             ],
           ),

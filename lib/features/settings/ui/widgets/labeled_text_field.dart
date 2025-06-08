@@ -5,13 +5,13 @@ import 'package:invoice_simple/core/theme/app_text_styles.dart';
 
 class LabeledTextField extends StatelessWidget {
   final String label;
-  final TextEditingController controller;
+ final void Function(String?) onChanged;
   final String hintText;
   final TextInputType? keyboardType;
 
   const LabeledTextField({super.key, 
     required this.label,
-    required this.controller,
+    required this.onChanged,
     required this.hintText,
     this.keyboardType,
   });
@@ -37,7 +37,7 @@ class LabeledTextField extends StatelessWidget {
           Expanded(
             child: TextField(
               cursorColor: AppColors.blueAccent,
-              controller: controller,
+             onChanged:onChanged ,
               keyboardType: keyboardType,
               style: AppTextStyles.poFont20BlackWh400.copyWith(
                 color: AppColors.blueAccent,

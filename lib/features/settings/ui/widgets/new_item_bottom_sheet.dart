@@ -4,7 +4,6 @@ import 'package:invoice_simple/core/theme/app_colors.dart';
 import 'package:invoice_simple/core/theme/app_text_styles.dart';
 import 'package:invoice_simple/core/widgets/filled_text_button.dart';
 import 'package:invoice_simple/features/settings/ui/widgets/custom_switch_button.dart';
-import 'package:invoice_simple/features/settings/ui/widgets/divider.dart';
 
 class NewItemBottomSheet extends StatefulWidget {
   const NewItemBottomSheet({super.key});
@@ -20,13 +19,14 @@ class _NewItemBottomSheetState extends State<NewItemBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Container(
-        decoration: const BoxDecoration(
-          color: AppColors.background,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 23, vertical: 10),
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.85,
+      decoration: const BoxDecoration(
+        color: AppColors.background,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 23, vertical: 10),
+      child: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -93,7 +93,11 @@ class _NewItemBottomSheetState extends State<NewItemBottomSheet> {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 5),
-                    child: CustomDivider(),
+                    child:  Divider(
+    height: 0,
+    
+      color: Color(0xFFF3F3F1)
+    )
                   ),
                   TextField(
                     style: AppTextStyles.poFont20BlackWh400.copyWith(

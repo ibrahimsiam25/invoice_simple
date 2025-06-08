@@ -106,6 +106,6 @@ class _CurrencyFieldState extends State<CurrencyField> {
         ),
         Divider (),
       ],
-    ); 
+    );
   }
 }

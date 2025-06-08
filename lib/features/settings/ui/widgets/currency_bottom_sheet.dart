@@ -1,8 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:invoice_simple/core/theme/app_colors.dart';
 import 'package:invoice_simple/core/theme/app_text_styles.dart';
 import 'package:invoice_simple/features/settings/data/model/currency_model.dart';
+
 
 class CurrencyBottomSheet extends StatelessWidget {
   final List<CurrencyModel> items;
@@ -21,57 +24,33 @@ class CurrencyBottomSheet extends StatelessWidget {
       orElse: () => items.first,
     );
 
-    return SafeArea(
-      child: Container(
-        
-        decoration: BoxDecoration(
-          color: AppColors.background,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-        ),
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.85, 
+      decoration: BoxDecoration(
+        color: AppColors.background,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+      ),
+      child: SingleChildScrollView(
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: MainAxisSize.min, // مهم جداً
           children: [
-            // Drag handle
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: Container(
-                width: 36,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: Color(0xFFD8D8D8),
-                  borderRadius: BorderRadius.circular(2),
+
+            SizedBox(height: 26.h),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.symmetric( horizontal: 24),
+                child: GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: Icon(Icons.close, size: 24, color: Colors.black),
                 ),
               ),
             ),
-      
-            // Title bar
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-              child: Row(
-                children: [
-                  GestureDetector(
-                    onTap: () => Navigator.pop(context),
-                    child: Icon(Icons.close, size: 24, color: Colors.black),
-                  ),
-                  Expanded(
-                    child: Center(
-                      child: Text(
+        SizedBox(height: 22.h),
+             Text(
                         'Currency',
-                        style: AppTextStyles.poFont20BlackWh600.copyWith(
-                          fontSize: 26.sp,
-                         
-                      ),)
-                    ),
-                  ),
-                  // Invisible for symmetry
-                  Opacity(
-                    opacity: 0,
-                    child: Icon(Icons.close, size: 24),
-                  ),
-                ],
-              ),
-            ),
-      
+                        style: AppTextStyles.poFont20BlackWh600.copyWith(fontSize: 26.sp),
+                      ),
             // Most recent label
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -81,22 +60,21 @@ class CurrencyBottomSheet extends StatelessWidget {
                   'Most recent',
                   style: AppTextStyles.poFont20BlackWh400.copyWith(
                     fontSize: 12.sp,
-                    color: AppColors. blueGrey 
+                    color: AppColors.blueGrey,
                   ),
                 ),
               ),
             ),
-      
-            // Most recent selected currency
+            
+            // Most recent currency item
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, ),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: InkWell(
                 onTap: () => Navigator.pop(context, mostRecent),
                 borderRadius: BorderRadius.circular(7),
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
                   decoration: BoxDecoration(
-                  
                     borderRadius: BorderRadius.circular(5.r),
                     color: Colors.white,
                   ),
@@ -104,60 +82,53 @@ class CurrencyBottomSheet extends StatelessWidget {
                     children: [
                       Text(
                         mostRecent.code,
-                        style: AppTextStyles.poFont20BlackWh600.copyWith(
-                          fontSize: 12.sp,
-                      
-                        ),
+                        style: AppTextStyles.poFont20BlackWh600.copyWith(fontSize: 12.sp),
                       ),
-                         SizedBox(width: 2.w),
+                      SizedBox(width: 2.w),
                       if (mostRecent.code == selected.code)
-      
                         Icon(Icons.check, size: 18.sp, color: AppColors.black),
-                     Spacer(),
+                      const Spacer(),
                       Text(
                         mostRecent.name,
-                     style: AppTextStyles.poFont20BlackWh400.copyWith(
+                        style: AppTextStyles.poFont20BlackWh400.copyWith(
                           fontSize: 12.sp,
                           color: AppColors.blueGrey,
-                      
                         ),
                       ),
-                      
                     ],
                   ),
                 ),
               ),
             ),
-      
-         
-            Padding(         
-              padding:  EdgeInsets.only(left: 24.w, top: 18,),
+            
+            // All currencies label
+            Padding(
+              padding: EdgeInsets.only(left: 24.w, top: 18),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
                   'All currencies',
                   style: AppTextStyles.poFont20BlackWh400.copyWith(
-                          fontSize: 12.sp,
-                          color: AppColors.blueGrey,
-      
-                        ),
+                    fontSize: 12.sp,
+                    color: AppColors.blueGrey,
+                  ),
                 ),
               ),
             ),
-       SizedBox(
-              height: 8.h,
-       ),
-         Padding(
-           padding:  EdgeInsets.symmetric(horizontal: 24.w),
-           child: Divider(
-                color: AppColors.extraLightGreyDivder,
-                height: 1,
-              ),
-         ),
-            Expanded(
-              child: ListView.builder(
+            
+            SizedBox(height: 8.h),
+            
+            Divider(
+              height: 1,
+              color: AppColors.extraLightGreyDivder,
+            ),
+            
+            SizedBox(height: 8.h),
+            
+            ListView.builder(
+              physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
                 itemCount: items.length,
-          
                 itemBuilder: (context, index) {
                   final currency = items[index];
                   return InkWell(
@@ -170,10 +141,9 @@ class CurrencyBottomSheet extends StatelessWidget {
                             width: 50,
                             child: Text(
                               currency.code,
-                             style: AppTextStyles.poFont20BlackWh400.copyWith(
-                          fontSize: 14.sp,
-                        
-                        ),
+                              style: AppTextStyles.poFont20BlackWh400.copyWith(
+                                fontSize: 14.sp,
+                              ),
                             ),
                           ),
                           Expanded(
@@ -182,20 +152,19 @@ class CurrencyBottomSheet extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                               style: AppTextStyles.poFont20BlackWh400.copyWith(
                                 fontSize: 14.sp,
-                                
                                 color: AppColors.blueGrey,
-                                    
                               ),
                             ),
                           ),
-                         
                         ],
                       ),
                     ),
                   );
                 },
-              ),
+              
             ),
+              SizedBox(height: 35.h),
+
           ],
         ),
       ),

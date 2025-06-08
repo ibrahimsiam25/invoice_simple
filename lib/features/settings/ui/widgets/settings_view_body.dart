@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:invoice_simple/core/helpers/app_constants.dart';
 import 'package:invoice_simple/core/theme/app_colors.dart';
+import 'package:invoice_simple/features/settings/ui/screens/add_clients_view.dart';
+import 'package:invoice_simple/features/settings/ui/screens/add_item_view.dart';
 import 'package:invoice_simple/features/settings/ui/screens/business_view.dart';
 import 'package:invoice_simple/features/settings/ui/widgets/business_user.dart';
 import 'package:invoice_simple/features/settings/ui/widgets/settings_tile.dart';
@@ -30,8 +32,12 @@ class SettingsViewBody extends StatelessWidget {
               SettingsTile(title: "Business Information", onTap: () {
                 context.push(BusinessView.routeName);
               }),
-              SettingsTile(title: "Clients", onTap: () {}),
-              SettingsTile(title: "Items", onTap: () {}),
+              SettingsTile(title: "Clients", onTap: () {
+                context.push(AddClientsView.routeName);
+              }),
+              SettingsTile(title: "Items", onTap: () {
+                context.push(AddItemView.routeName);
+              }),
               SettingsTile(isHaveIcon: false,title: "Privacy", onTap: () {}),
               SettingsTile(isHaveIcon: false,title: "Terms", onTap: () {}),
               SettingsTile(isHaveIcon: false,title: "Contact", onTap: () {}),

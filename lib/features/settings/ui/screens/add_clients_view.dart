@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:invoice_simple/core/theme/app_colors.dart';
 import 'package:invoice_simple/core/widgets/custom_text_and_icon_back_appbar.dart';
-import 'package:invoice_simple/features/settings/ui/widgets/add_item_view_body.dart';
-import 'package:invoice_simple/features/settings/ui/widgets/new_item_bottom_sheet.dart';
+import 'package:invoice_simple/features/settings/ui/widgets/add_clients_view_body.dart';
+import 'package:invoice_simple/features/settings/ui/widgets/new_client_bottom_sheet.dart';
 
-class AddItemView extends StatefulWidget {
-  const AddItemView({super.key});
-  static const String routeName = '/add-item-view';
+class AddClientsView extends StatefulWidget {
+  const AddClientsView({super.key});
+  static const String routeName = '/add-clients';
 
   @override
-  State<AddItemView> createState() => _AddItemViewState();
+  State<AddClientsView> createState() => _AddClientsViewState();
 }
 
-class _AddItemViewState extends State<AddItemView> {
+class _AddClientsViewState extends State<AddClientsView> {
   late TextEditingController myController;
 
   @override
@@ -36,14 +36,14 @@ class _AddItemViewState extends State<AddItemView> {
         title: 'Add Item',
         onAction: () {
           showModalBottomSheet(
-            context: context,
             isScrollControlled: true,
             backgroundColor: Colors.transparent,
-            builder: (context) => const NewItemBottomSheet(),
+            context: context,
+            builder: (context) => NewClientBottomSheet(),
           );
         },
       ),
-      body: AddItemViewBody(myController: myController),
+      body: AddClientsViewBody(myController: myController),
     );
   }
 }

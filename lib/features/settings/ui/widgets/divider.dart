@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:invoice_simple/core/theme/app_colors.dart';
 
 
 class CustomDivider extends StatelessWidget {
@@ -6,10 +7,10 @@ class CustomDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Divider(
+    return       Divider(  
     height: 0,
-    
-      color: Color(0xFFF3F3F1)
+    thickness: 0.35,
+      color:AppColors.blueGrey
     );
 
   }

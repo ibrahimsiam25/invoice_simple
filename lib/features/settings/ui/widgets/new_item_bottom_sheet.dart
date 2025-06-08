@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hive/hive.dart';
+import 'package:invoice_simple/core/helpers/app_constants.dart';
 import 'package:invoice_simple/core/theme/app_colors.dart';
 import 'package:invoice_simple/core/theme/app_text_styles.dart';
+import 'package:invoice_simple/core/widgets/build_message_bar.dart';
 import 'package:invoice_simple/core/widgets/filled_text_button.dart';
+import 'package:invoice_simple/core/widgets/show_required_fields_dialog.dart';
+import 'package:invoice_simple/features/settings/data/model/item_model.dart';
 import 'package:invoice_simple/features/settings/ui/widgets/custom_switch_button.dart';
 
 class NewItemBottomSheet extends StatefulWidget {
@@ -16,6 +21,59 @@ class _NewItemBottomSheetState extends State<NewItemBottomSheet> {
   bool saveToCatalog = false;
   bool discountActive = false;
   bool taxable = false;
+
+  // Controllers for TextFields
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController detailsController = TextEditingController();
+  final TextEditingController unitPriceController = TextEditingController();
+  final TextEditingController quantityController = TextEditingController(text: "1");
+  final TextEditingController unitTypeController = TextEditingController(text: "Optional");
+  final TextEditingController discountController = TextEditingController();
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    detailsController.dispose();
+    unitPriceController.dispose();
+    quantityController.dispose();
+    unitTypeController.dispose();
+    discountController.dispose();
+    super.dispose();
+  }
+
+  void _saveItem() async {
+      if (nameController.text.trim().isEmpty) {
+        showRequiredFieldsDialog(context, "Name is required");
+      return;
+    }
+    String? billTo = nameController.text.trim().isEmpty ? null : nameController.text.trim();
+    String? details = detailsController.text.trim().isEmpty ? null : detailsController.text.trim();
+
+    double? unitPrice = double.tryParse(unitPriceController.text.trim());
+    int? quantity = int.tryParse(quantityController.text.trim());
+    String? unitType = unitTypeController.text.trim().isEmpty ? null : unitTypeController.text.trim();
+    double? discount = double.tryParse(discountController.text.trim());
+
+    final item = ItemModel(
+      name: billTo,
+      details: details,
+      saveToCatalog: saveToCatalog,
+      unitPrice: unitPrice,
+      quantity: quantity,
+      unitType: unitType,
+      discount: discount,
+      discountActive: discountActive,
+      taxable: taxable,
+    );
+
+    final box = await Hive.openBox<ItemModel>(AppConstants.hiveItemBox);
+    await box.add(item);
+
+    if (!mounted) return;
+    Navigator.of(context).pop(); 
+
+    buildMessageBar(context, "Item added successfully");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +93,9 @@ class _NewItemBottomSheetState extends State<NewItemBottomSheet> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 GestureDetector(
-                  
+                  onTap: () {
+                    Navigator.of(context).pop(); // Close the bottom sheet
+                  },
                   child: Text(
                     "Cancel",
                     style: AppTextStyles.poFont20BlackWh400.copyWith(
@@ -43,11 +103,17 @@ class _NewItemBottomSheetState extends State<NewItemBottomSheet> {
                     ),
                   ),
                 ),
-
-                Text(
-                  "Done",
-                  style: AppTextStyles.poFont20BlackWh600.copyWith(
-                    fontSize: 14.sp,
+                GestureDetector(
+                  onTap: () {
+                    
+                      _saveItem();
+                    
+                  },
+                  child: Text(
+                    "Done",
+                    style: AppTextStyles.poFont20BlackWh600.copyWith(
+                      fontSize: 14.sp,
+                    ),
                   ),
                 ),
               ],
@@ -71,6 +137,7 @@ class _NewItemBottomSheetState extends State<NewItemBottomSheet> {
               child: Column(
                 children: [
                   TextField(
+                    controller: nameController,
                     style: AppTextStyles.poFont20BlackWh400.copyWith(
                       color: AppColors.blueAccent,
                       fontSize: 13,
@@ -87,7 +154,7 @@ class _NewItemBottomSheetState extends State<NewItemBottomSheet> {
                       ),
                       filled: true,
                       fillColor: AppColors.white,
-                      hintText: 'Bill To',
+                      hintText: 'name',
                       hintStyle: AppTextStyles.poFont20BlackWh400.copyWith(
                         fontSize: 13,
                         color: AppColors.extraLightGreyFont,
@@ -96,13 +163,13 @@ class _NewItemBottomSheetState extends State<NewItemBottomSheet> {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 5),
-                    child:  Divider(
-    height: 0,
-    
-      color: Color(0xFFF3F3F1)
-    )
+                    child: Divider(
+                      height: 0,
+                      color: Color(0xFFF3F3F1),
+                    ),
                   ),
                   TextField(
+                    controller: detailsController,
                     style: AppTextStyles.poFont20BlackWh400.copyWith(
                       color: AppColors.blueAccent,
                       fontSize: 13,
@@ -142,7 +209,6 @@ class _NewItemBottomSheetState extends State<NewItemBottomSheet> {
                     color: AppColors.blueGrey,
                   ),
                 ),
-
                 CustomSwitchButton(
                   value: saveToCatalog,
                   onChanged: (val) {
@@ -215,6 +281,7 @@ class _NewItemBottomSheetState extends State<NewItemBottomSheet> {
                       Expanded(
                         flex: 2,
                         child: TextField(
+                          controller: unitPriceController,
                           decoration: InputDecoration(
                             isDense: true,
                             border: InputBorder.none,
@@ -233,6 +300,7 @@ class _NewItemBottomSheetState extends State<NewItemBottomSheet> {
                         flex: 2,
                         child: Center(
                           child: TextField(
+                            controller: quantityController,
                             decoration: InputDecoration(
                               isDense: true,
                               border: InputBorder.none,
@@ -260,10 +328,18 @@ class _NewItemBottomSheetState extends State<NewItemBottomSheet> {
                               color: AppColors.white,
                               borderRadius: BorderRadius.circular(6),
                             ),
-                            child: Text(
-                              "Optional",
+                            child: TextField(
+                              controller: unitTypeController,
+                              decoration: InputDecoration(
+                                isDense: true,
+                                border: InputBorder.none,
+                                hintText: "Optional",
+                                hintStyle: AppTextStyles.poFont20BlackWh400.copyWith(
+                                  fontSize: 12.sp,
+                                ),
+                              ),
                               style: AppTextStyles.poFont20BlackWh400.copyWith(
-                                fontSize: 12.sp,
+                                fontSize: 13,
                               ),
                             ),
                           ),
@@ -299,10 +375,10 @@ class _NewItemBottomSheetState extends State<NewItemBottomSheet> {
                   Expanded(
                     flex: 2,
                     child: TextField(
+                      controller: discountController,
                       decoration: InputDecoration(
                         isDense: true,
                         border: InputBorder.none,
-
                         hintText: "0",
                         hintStyle: AppTextStyles.poFont20BlackWh400.copyWith(
                           fontSize: 12.sp,
@@ -351,7 +427,11 @@ class _NewItemBottomSheetState extends State<NewItemBottomSheet> {
             FilledTextButton(
               color: AppColors.blue,
               text: 'Add Item',
-              onPressed: () {},
+              onPressed: () {
+           
+                 _saveItem();
+               
+              },
             ),
             SizedBox(height: 38.h),
           ],
@@ -359,4 +439,4 @@ class _NewItemBottomSheetState extends State<NewItemBottomSheet> {
       ),
     );
   }
-}
+} 

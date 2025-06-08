@@ -33,7 +33,7 @@ class _AddClientsViewState extends State<AddClientsView> {
       backgroundColor: AppColors.background,
       appBar: CustomTextAndIconBackAppbar(
         actionIcon: Icons.add,
-        title: 'Add Item',
+        title: 'Clients',
         onAction: () {
           showModalBottomSheet(
             isScrollControlled: true,

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:invoice_simple/core/theme/app_text_styles.dart';
 import 'package:invoice_simple/features/settings/data/model/business_user_model.dart';
 import 'package:invoice_simple/features/settings/ui/widgets/business_user.dart';
-import 'package:flutter/material.dart';
+
 
 class BusinessViewBody extends StatelessWidget {
   const BusinessViewBody({

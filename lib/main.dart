@@ -10,6 +10,7 @@ import 'package:invoice_simple/core/helpers/app_constants.dart';
 import 'package:invoice_simple/core/helpers/custom_bloc_observer.dart';
 import 'package:invoice_simple/core/helpers/shared_pref_helper.dart';
 import 'package:invoice_simple/features/settings/data/model/business_user_model.dart';
+import 'package:invoice_simple/features/settings/data/model/client_model.dart';
 import 'package:invoice_simple/features/settings/data/model/item_model.dart';
 import 'package:invoice_simple/my_app.dart';
 void main() async {
@@ -24,6 +25,10 @@ void main() async {
 
  Hive.registerAdapter(ItemModelAdapter());
  await Hive.openBox<ItemModel>(AppConstants.hiveItemBox);
+
+ Hive.registerAdapter(ClientModelAdapter());
+await Hive.openBox<ClientModel>(AppConstants.hiveClientBox);
+
 
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,

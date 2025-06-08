@@ -5,7 +5,7 @@ part 'item_model.g.dart';
 @HiveType(typeId: 1)
 class ItemModel extends HiveObject {
   @HiveField(0)
-  String? billTo;
+  String? name;
 
   @HiveField(1)
   String? details;
@@ -32,7 +32,7 @@ class ItemModel extends HiveObject {
   bool taxable;
 
   ItemModel({
-    this.billTo,
+    this.name,
     this.details,
     this.saveToCatalog = false,
     this.unitPrice,

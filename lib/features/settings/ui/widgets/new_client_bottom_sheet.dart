@@ -1,10 +1,15 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hive/hive.dart';
+import 'package:invoice_simple/core/helpers/app_constants.dart';
 import 'package:invoice_simple/core/theme/app_colors.dart';
 import 'package:invoice_simple/core/theme/app_text_styles.dart';
+import 'package:invoice_simple/core/widgets/build_message_bar.dart';
 import 'package:invoice_simple/core/widgets/filled_text_button.dart';
-import 'package:invoice_simple/features/settings/ui/widgets/divider.dart';
-
+import 'package:invoice_simple/core/widgets/show_required_fields_dialog.dart';
+import 'package:invoice_simple/features/settings/data/model/client_model.dart';
+import 'package:invoice_simple/features/settings/ui/widgets/labeled_text_field.dart';
 class NewClientBottomSheet extends StatefulWidget {
   const NewClientBottomSheet({super.key});
 
@@ -13,12 +18,46 @@ class NewClientBottomSheet extends StatefulWidget {
 }
 
 class _NewClientBottomSheetState extends State<NewClientBottomSheet> {
-  final TextEditingController billToController = TextEditingController();
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
-  final TextEditingController addressController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
 
+
+ String billTo = "",
+      clientName = "",
+      clientPhone = "",
+      clientEmail = "",
+      clientAddress = "";
+      
+  Future<void> saveClient() async {
+    // Check if any required field is empty
+    if (billTo.trim().isEmpty ||
+        clientName.trim().isEmpty ||
+        clientPhone.trim().isEmpty ||
+        clientAddress.trim().isEmpty) {
+        showRequiredFieldsDialog(context, "Please fill all required fields");
+      return;
+    }
+
+    final newClient = ClientModel(
+      billTo: billTo.trim(),
+      clientName: clientName.trim(),
+      clientPhone: clientPhone.trim(),
+      clientAddress: clientAddress.trim(),
+      clientEmail: clientEmail.trim(),
+    );
+
+    final box = await Hive.openBox<ClientModel>(AppConstants.hiveClientBox);
+    await box.add(newClient);
+
+    if (!mounted) return;
+    for (var client in box.values) {
+      print('Client: ${client.clientName}, Phone: ${client.clientPhone} '
+          'Address: ${client.clientAddress}, Email: ${client.clientEmail}'
+          ', Bill To: ${client.billTo}-----------' );
+    }
+    Navigator.of(context).pop();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Client saved successfully!")),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
@@ -50,7 +89,7 @@ class _NewClientBottomSheetState extends State<NewClientBottomSheet> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.pop(context);
+                        saveClient();
                       }, 
                       child: Text(
                         "Done",
@@ -70,7 +109,7 @@ class _NewClientBottomSheetState extends State<NewClientBottomSheet> {
                 
                 // Bill To field
                 TextField(
-                  controller: billToController,
+                  onChanged: (value) => billTo = value,
                   style: AppTextStyles.poFont20BlackWh400.copyWith(
                     fontSize: 12.sp,
                     color: AppColors.blueAccent,
@@ -115,21 +154,28 @@ class _NewClientBottomSheetState extends State<NewClientBottomSheet> {
                   ),
                   child: Column(
                     children: [
-                      // Name
-                      _buildContactField("Name", nameController),
-                      const SizedBox(height: 10),
-                
-                      // Phone
-                      _buildContactField("Phone", phoneController),
-                      const SizedBox(height: 10),
-                
-                      // Address
-                      _buildContactField("Address", addressController),
-                      const SizedBox(height: 10),
-                
-                      // Email
-                      _buildContactField("E-mail", emailController),
-                      const SizedBox(height: 20),
+                        LabeledTextField(
+                  label: 'Name',
+                  onChanged: (val) => clientName = val?? "",
+                  hintText: 'Must be filled',
+                ),
+                LabeledTextField(
+                  label: 'Phone',
+                  onChanged: (val) => clientPhone = val?? "",
+                  hintText: 'Must be filled',
+                  keyboardType: TextInputType.phone,
+                ),
+                LabeledTextField(
+                  label: 'Address',
+                  onChanged: (val) => clientAddress = val?? "",
+                  hintText: 'Must be filled',
+                ),
+                LabeledTextField(
+                  label: 'E-Mail',
+                  onChanged: (val) => clientEmail = val?? "",
+                  hintText: 'Optional',
+                  keyboardType: TextInputType.emailAddress,
+                ),
                     ],
                   ),
                 ),
@@ -158,8 +204,8 @@ class _NewClientBottomSheetState extends State<NewClientBottomSheet> {
   FilledTextButton(
     color: AppColors.blue,
     text: "Continue", onPressed: () {
-
-                  }),
+      saveClient();
+    }),
                 const SizedBox(height: 40),
               ],
             ),
@@ -169,44 +215,5 @@ class _NewClientBottomSheetState extends State<NewClientBottomSheet> {
     );
   }
 
-  // Helper method to build contact fields
-  Widget _buildContactField(String label, TextEditingController controller) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            SizedBox(
-              width: 85.w,
-              child: Text(
-                label,
-                style: AppTextStyles.poFont20BlackWh400.copyWith(
-                  fontSize: 14.sp,
-                ),
-              ),
-            ),
-            Expanded(
-              child: TextField(
-                controller: controller,
-                style: AppTextStyles.poFont20BlackWh400.copyWith(
-                  fontSize: 13,
-                  color: AppColors.blueAccent,
-                ),
-                cursorColor: AppColors.blueAccent,
-                decoration: InputDecoration(
-                  hintText: "Optional",
-                  hintStyle: AppTextStyles.poFont20BlackWh400.copyWith(
-                    fontSize: 13,
-                    color: AppColors.blueGrey,
-                  ),
-                  border: InputBorder.none,
-                ),
-              ),
-            ),
-            const SizedBox(width: 10),
-          ],
-        ),
-        const CustomDivider(), // Assuming CustomDivider is defined elsewhere
-      ],
-    );
-  }
+ 
 }

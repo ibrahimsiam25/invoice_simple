@@ -5,8 +5,11 @@ class AppConstants {
   static const String fontFamilyPoppins = 'Poppins';
   static const String fontFamilyMontserrat = 'Montserrat';
   static const String prefsNotFirstLogin = 'isFirstLogin';
+
   static const String hiveBusinessBox = 'businessBox';
   static const String hiveItemBox = 'itemBox';
+  static const String hiveClientBox = 'clientBox';
+  
   static double paddingHorizontal = 16.w;
 
 }

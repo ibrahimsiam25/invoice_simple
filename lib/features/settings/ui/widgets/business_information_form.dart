@@ -53,7 +53,7 @@ class BusinessInformationForm extends StatelessWidget {
               LabeledTextField(
                 label: 'Name',
                 onChanged: onChangedName,
-                hintText: 'Optional',
+                hintText: 'Must be filled',
               ),
               Divider(),
               LabeledTextField(

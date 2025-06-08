@@ -33,7 +33,7 @@ class _AddItemViewState extends State<AddItemView> {
       backgroundColor: AppColors.background,
       appBar: CustomTextAndIconBackAppbar(
         actionIcon: Icons.add,
-        title: 'Add Item',
+        title: 'Items',
         onAction: () {
           showModalBottomSheet(
             context: context,

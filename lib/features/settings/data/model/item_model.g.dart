@@ -17,7 +17,7 @@ class ItemModelAdapter extends TypeAdapter<ItemModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return ItemModel(
-      billTo: fields[0] as String?,
+      name: fields[0] as String?,
       details: fields[1] as String?,
       saveToCatalog: fields[2] as bool,
       unitPrice: fields[3] as double?,
@@ -34,7 +34,7 @@ class ItemModelAdapter extends TypeAdapter<ItemModel> {
     writer
       ..writeByte(9)
       ..writeByte(0)
-      ..write(obj.billTo)
+      ..write(obj.name)
       ..writeByte(1)
       ..write(obj.details)
       ..writeByte(2)

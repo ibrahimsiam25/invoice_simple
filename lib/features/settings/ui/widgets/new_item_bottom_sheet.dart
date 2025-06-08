@@ -21,7 +21,7 @@ class _NewItemBottomSheetState extends State<NewItemBottomSheet> {
   bool saveToCatalog = false;
   bool discountActive = false;
   bool taxable = false;
-
+ 
   // Controllers for TextFields
   final TextEditingController nameController = TextEditingController();
   final TextEditingController detailsController = TextEditingController();

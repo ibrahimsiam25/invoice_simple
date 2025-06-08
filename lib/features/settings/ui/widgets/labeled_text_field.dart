@@ -8,12 +8,13 @@ class LabeledTextField extends StatelessWidget {
  final void Function(String?) onChanged;
   final String hintText;
   final TextInputType? keyboardType;
-
+ final TextEditingController? controller;
   const LabeledTextField({super.key, 
     required this.label,
     required this.onChanged,
     required this.hintText,
     this.keyboardType,
+    this.controller,
   });
 
   @override
@@ -36,6 +37,7 @@ class LabeledTextField extends StatelessWidget {
           ),
           Expanded(
             child: TextField(
+              controller: controller,
               cursorColor: AppColors.blueAccent,
              onChanged:onChanged ,
               keyboardType: keyboardType,

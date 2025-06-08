@@ -55,5 +55,7 @@
         <string>We need access to speech recognition to convert your voice to text inside the app.</string>
         <key>NSMicrophoneUsageDescription</key>
         <string>We need access to the microphone to record your voice.</string>
+	    <key>NSContactsUsageDescription</key>
+        <string>Reason we need access to the contact list</string>
 	</dict>
 </plist>

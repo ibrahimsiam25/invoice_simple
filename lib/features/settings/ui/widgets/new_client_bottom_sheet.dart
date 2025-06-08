@@ -1,15 +1,16 @@
-
 import 'package:flutter/material.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive/hive.dart';
 import 'package:invoice_simple/core/helpers/app_constants.dart';
 import 'package:invoice_simple/core/theme/app_colors.dart';
 import 'package:invoice_simple/core/theme/app_text_styles.dart';
-import 'package:invoice_simple/core/widgets/build_message_bar.dart';
+
 import 'package:invoice_simple/core/widgets/filled_text_button.dart';
 import 'package:invoice_simple/core/widgets/show_required_fields_dialog.dart';
 import 'package:invoice_simple/features/settings/data/model/client_model.dart';
 import 'package:invoice_simple/features/settings/ui/widgets/labeled_text_field.dart';
+
 class NewClientBottomSheet extends StatefulWidget {
   const NewClientBottomSheet({super.key});
 
@@ -18,51 +19,79 @@ class NewClientBottomSheet extends StatefulWidget {
 }
 
 class _NewClientBottomSheetState extends State<NewClientBottomSheet> {
+  final billToController = TextEditingController();
+  final clientNameController = TextEditingController();
+  final clientPhoneController = TextEditingController();
+  final clientEmailController = TextEditingController();
+  final clientAddressController = TextEditingController();
+  @override
+  void dispose() {
+    billToController.dispose();
+    clientNameController.dispose();
+    clientPhoneController.dispose();
+    clientEmailController.dispose();
+    clientAddressController.dispose();
+    super.dispose();
+  }
 
+  Future<void> importContact(BuildContext context) async {
+    if (!await FlutterContacts.requestPermission()) {
+      showRequiredFieldsDialog(context, "Please allow access to contacts");
+      return;
+    }
+    final contact = await FlutterContacts.openExternalPick();
+    if (contact == null) return;
 
- String billTo = "",
-      clientName = "",
-      clientPhone = "",
-      clientEmail = "",
-      clientAddress = "";
-      
+    setState(() {
+      clientNameController.text = contact.displayName;
+      clientPhoneController.text =
+          contact.phones.isNotEmpty ? contact.phones.first.number : '';
+      clientEmailController.text =
+          contact.emails.isNotEmpty ? contact.emails.first.address : '';
+      clientAddressController.text =
+          contact.addresses.isNotEmpty
+              ? [
+                contact.addresses.first.street,
+                contact.addresses.first.city,
+                contact.addresses.first.postalCode,
+                contact.addresses.first.country,
+              ].where((s) => s.isNotEmpty).join(', ')
+              : '';
+    });
+  }
+
   Future<void> saveClient() async {
-    // Check if any required field is empty
-    if (billTo.trim().isEmpty ||
-        clientName.trim().isEmpty ||
-        clientPhone.trim().isEmpty ||
-        clientAddress.trim().isEmpty) {
-        showRequiredFieldsDialog(context, "Please fill all required fields");
+    if (billToController.text.trim().isEmpty ||
+        clientNameController.text.trim().isEmpty ||
+        clientPhoneController.text.trim().isEmpty ||
+        clientAddressController.text.trim().isEmpty) {
+      showRequiredFieldsDialog(context, "Please fill all required fields");
       return;
     }
 
     final newClient = ClientModel(
-      billTo: billTo.trim(),
-      clientName: clientName.trim(),
-      clientPhone: clientPhone.trim(),
-      clientAddress: clientAddress.trim(),
-      clientEmail: clientEmail.trim(),
+      billTo: billToController.text.trim(),
+      clientName: clientNameController.text.trim(),
+      clientPhone: clientPhoneController.text.trim(),
+      clientAddress: clientAddressController.text.trim(),
+      clientEmail: clientEmailController.text.trim(),
     );
 
     final box = await Hive.openBox<ClientModel>(AppConstants.hiveClientBox);
     await box.add(newClient);
 
     if (!mounted) return;
-    for (var client in box.values) {
-      print('Client: ${client.clientName}, Phone: ${client.clientPhone} '
-          'Address: ${client.clientAddress}, Email: ${client.clientEmail}'
-          ', Bill To: ${client.billTo}-----------' );
-    }
     Navigator.of(context).pop();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Client saved successfully!")),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text("Client saved successfully!")));
   }
+
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
       constraints: BoxConstraints(
-        maxHeight: MediaQuery.of(context).size.height * 0.85, 
+        maxHeight: MediaQuery.of(context).size.height * 0.85,
       ),
       child: IntrinsicHeight(
         child: Container(
@@ -84,32 +113,38 @@ class _NewClientBottomSheetState extends State<NewClientBottomSheet> {
                       onTap: () => Navigator.pop(context),
                       child: Text(
                         "Cancel",
-                        style: AppTextStyles.poFont20BlackWh400.copyWith(fontSize: 14.sp),
+                        style: AppTextStyles.poFont20BlackWh400.copyWith(
+                          fontSize: 14.sp,
+                        ),
                       ),
                     ),
                     GestureDetector(
                       onTap: () {
                         saveClient();
-                      }, 
+                      },
                       child: Text(
                         "Done",
-                        style: AppTextStyles.poFont20BlackWh600.copyWith(fontSize: 14.sp),
+                        style: AppTextStyles.poFont20BlackWh600.copyWith(
+                          fontSize: 14.sp,
+                        ),
                       ),
                     ),
                   ],
                 ),
                 SizedBox(height: 35),
-                
+
                 // Header
                 Text(
                   "New Client",
-                  style: AppTextStyles.poFont20BlackWh600.copyWith(fontSize: 26.sp),
+                  style: AppTextStyles.poFont20BlackWh600.copyWith(
+                    fontSize: 26.sp,
+                  ),
                 ),
                 SizedBox(height: 23),
-                
+
                 // Bill To field
                 TextField(
-                  onChanged: (value) => billTo = value,
+                  controller: billToController,
                   style: AppTextStyles.poFont20BlackWh400.copyWith(
                     fontSize: 12.sp,
                     color: AppColors.blueAccent,
@@ -121,7 +156,10 @@ class _NewClientBottomSheetState extends State<NewClientBottomSheet> {
                       fontSize: 12.sp,
                       color: AppColors.blueGrey,
                     ),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 12,
+                    ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                       borderSide: BorderSide.none,
@@ -130,9 +168,9 @@ class _NewClientBottomSheetState extends State<NewClientBottomSheet> {
                     fillColor: AppColors.white,
                   ),
                 ),
-                
+
                 const SizedBox(height: 16),
-                
+
                 // Contacts section header
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
@@ -144,68 +182,81 @@ class _NewClientBottomSheetState extends State<NewClientBottomSheet> {
                     ),
                   ),
                 ),
-                
+
                 // Contacts form
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 23.w, vertical: 20.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 23.w,
+                    vertical: 20.h,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.white,
                     borderRadius: BorderRadius.circular(5.r),
                   ),
                   child: Column(
                     children: [
-                        LabeledTextField(
-                  label: 'Name',
-                  onChanged: (val) => clientName = val?? "",
-                  hintText: 'Must be filled',
-                ),
-                LabeledTextField(
-                  label: 'Phone',
-                  onChanged: (val) => clientPhone = val?? "",
-                  hintText: 'Must be filled',
-                  keyboardType: TextInputType.phone,
-                ),
-                LabeledTextField(
-                  label: 'Address',
-                  onChanged: (val) => clientAddress = val?? "",
-                  hintText: 'Must be filled',
-                ),
-                LabeledTextField(
-                  label: 'E-Mail',
-                  onChanged: (val) => clientEmail = val?? "",
-                  hintText: 'Optional',
-                  keyboardType: TextInputType.emailAddress,
-                ),
+                      LabeledTextField(
+                        label: 'Name',
+                        onChanged: (val) {},
+                        controller: clientNameController,
+                        hintText: 'Must be filled',
+                      ),
+                      LabeledTextField(
+                        label: 'Phone',
+                        controller: clientPhoneController,
+                        onChanged: (val) {},
+                        hintText: 'Must be filled',
+                        keyboardType: TextInputType.phone,
+                      ),
+                      LabeledTextField(
+                        label: 'Address',
+                        controller: clientAddressController,
+                        onChanged: (val) {},
+                        hintText: 'Must be filled',
+                      ),
+                      LabeledTextField(
+                        label: 'E-Mail',
+                        controller: clientEmailController,
+                        onChanged: (val) {},
+                        hintText: 'Optional',
+                        keyboardType: TextInputType.emailAddress,
+                      ),
                     ],
                   ),
                 ),
-                
-              SizedBox(height: 12.h),
+
+                SizedBox(height: 12.h),
                 Container(
-                  padding: EdgeInsets.symmetric( vertical: 9.h),
+                  padding: EdgeInsets.symmetric(vertical: 9.h),
                   decoration: BoxDecoration(
                     color: AppColors.white,
                     borderRadius: BorderRadius.circular(5.r),
-                
                   ),
                   child: Center(
-                    child: Text(
-                      "Import from Contacts",
-                      style: AppTextStyles.poFont20BlackWh400.copyWith(
-                        fontSize: 12.sp,
-                        color: AppColors.primary,
+                    child: GestureDetector(
+                      onTap: () {
+                        importContact(context);
+                      },
+                      child: Text(
+                        "Import from Contacts",
+                        style: AppTextStyles.poFont20BlackWh400.copyWith(
+                          fontSize: 12.sp,
+                          color: AppColors.primary,
+                        ),
                       ),
                     ),
                   ),
                 ),
-                
+
                 const SizedBox(height: 30),
-                
-  FilledTextButton(
-    color: AppColors.blue,
-    text: "Continue", onPressed: () {
-      saveClient();
-    }),
+
+                FilledTextButton(
+                  color: AppColors.blue,
+                  text: "Continue",
+                  onPressed: () {
+                    saveClient();
+                  },
+                ),
                 const SizedBox(height: 40),
               ],
             ),
@@ -214,6 +265,4 @@ class _NewClientBottomSheetState extends State<NewClientBottomSheet> {
       ),
     );
   }
-
- 
 }

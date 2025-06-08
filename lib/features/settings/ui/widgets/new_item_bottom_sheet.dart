@@ -34,10 +34,13 @@ class _NewItemBottomSheetState extends State<NewItemBottomSheet> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  "Cancel",
-                  style: AppTextStyles.poFont20BlackWh400.copyWith(
-                    fontSize: 14.sp,
+                GestureDetector(
+                  
+                  child: Text(
+                    "Cancel",
+                    style: AppTextStyles.poFont20BlackWh400.copyWith(
+                      fontSize: 14.sp,
+                    ),
                   ),
                 ),
 

@@ -16,7 +16,7 @@ import 'package:invoice_simple/features/settings/ui/screens/signature_view.dart'
 abstract class AppRouter {
   static GoRouter getRouter(bool isNotFirstLogin) {
     return GoRouter(
-      initialLocation: BusinessView.routeName,
+      initialLocation: SettingsView.routeName,
       //  isNotFirstLogin
       //     ? InvoiceDashboardView.routeName
       //     : OnBoardingView.routeName,

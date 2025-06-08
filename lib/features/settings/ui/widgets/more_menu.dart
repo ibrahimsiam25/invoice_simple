@@ -24,35 +24,38 @@ class _MoreMenuState extends State<MoreMenu> {
     _overlayEntry?.remove();
     _overlayEntry = null;
   }
-
-  OverlayEntry _buildOverlayEntry() {
-    return OverlayEntry(
-      builder: (context) => GestureDetector(
-        onTap: _hideMenu,
-        behavior: HitTestBehavior.translucent,
-        child: Stack(
-          children: [
-            // this follower positions relative to the IconButton
-            CompositedTransformFollower(
-              link: _layerLink,
-              offset: const Offset(-160, -8), // adjust as needed
-              showWhenUnlinked: false,
-              child: Material(
-                color: Colors.transparent,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.circular(8.r),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.10),
-                        blurRadius: 16,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: IntrinsicWidth( // makes width fit content
+OverlayEntry _buildOverlayEntry() {
+  return OverlayEntry(
+    builder: (context) => GestureDetector(
+      onTap: _hideMenu,
+      behavior: HitTestBehavior.translucent,
+      child: Stack(
+        children: [
+          CompositedTransformFollower(
+            link: _layerLink,
+            offset: const Offset(-160, -8), // adjust as needed
+            showWhenUnlinked: false,
+            child: Material(
+              color: Colors.transparent,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                decoration: BoxDecoration(
+                  color: AppColors.white,
+                  borderRadius: BorderRadius.circular(8.r),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.10),
+                      blurRadius: 16,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: IntrinsicWidth(
+                  child: GestureDetector(
+                    onTap: () {
+                      widget.onDelete?.call();
+                      _hideMenu();
+                    },
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -71,11 +74,12 @@ class _MoreMenuState extends State<MoreMenu> {
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
 
   @override
   Widget build(BuildContext context) {

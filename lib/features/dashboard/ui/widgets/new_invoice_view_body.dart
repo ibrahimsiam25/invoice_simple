@@ -238,70 +238,73 @@ BlocBuilder<BusinessCubit, BusinessState>(
 
 
             
-            if (selectedItems.isEmpty)
-              AddRowButton(
-                text: "Add Items",
-            onTap: () {
-  context.push(
-    AddItemView.routeName,
-    extra: (List<ItemModel> item) {
-      setState(() {
-        selectedItems.addAll(item);
-        updateTotalAmount();
-      });
-    },
-  ).then((_) {
-    // هنا تأكد من إعادة تحميل البيانات أو تحديث الحالة
-    setState(() {
-      // أو إذا تحتاج عمل fetch من Hive أو أي مصدر بيانات آخر
-      // مثلا:
-      // selectedItems = fetchItemsFromHive();
-      updateTotalAmount();
-    });
-  });
-},
-
-              )
-            else
-              Column(
-                children: [
-                  Column(
-                    children: selectedItems.map((item) {
-                      return CustomSelectItem(
-                        text: item.name ?? 'Unknown Item',
-                        onPressed: () {
-                          setState(() {
-                            selectedItems.remove(item);
-                                updateTotalAmount();
-                  
-                          });
-                        },
-                      );
-                    }).toList(),
-                  ),
-                  SizedBox(height: 10),
-                  AddRowButton(
-                text: "Add another Items",
-                onTap: () {
-                  selectedItems =[];
-                  context.push(
-                    AddItemView.routeName,
-                    extra: (List<ItemModel> item) {
-                      setState(() {
-                     
-                        selectedItems.addAll(item);
-                          updateTotalAmount();
-                      });
-                    },
-                  );
-                },
-              )
-                ],
-              ),
-
-
-
-
+       BlocBuilder<ItemsCubit, ItemsState>(
+            builder: (context, state) {
+              if (state.selectedItems.isEmpty) {
+                return AddRowButton(
+                  text: "Add Items",
+                  onTap: () async {
+                    final cubit = context.read<ItemsCubit>();
+                    
+                    final selectedItems = await context.push<List<ItemModel>>(
+                      AddItemView.routeName,
+                      extra: true, // clickable = true
+                    );
+                    
+                    if (selectedItems != null && selectedItems.isNotEmpty) {
+                      cubit.addItems(selectedItems);
+                    }
+                  },
+                );
+              } else {
+                return Column(
+                  children: [
+                    // Display selected items
+                    Column(
+                      children: state.selectedItems.map((item) {
+                        return CustomSelectItem(
+                          text: item.name ?? 'Unknown Item',
+                          onPressed: () {
+                            context.read<ItemsCubit>().removeItem(item);
+                          },
+                        );
+                      }).toList(),
+                    ),
+                    
+                    SizedBox(height: 10),
+                    
+                    // Add another items button
+                    AddRowButton(
+                      text: "Add another Items",
+                      onTap: () async {
+                        final cubit = context.read<ItemsCubit>();
+                        
+                        final selectedItems = await context.push<List<ItemModel>>(
+                          AddItemView.routeName,
+                          extra: true, // clickable = true
+                        );
+                        
+                        if (selectedItems != null && selectedItems.isNotEmpty) {
+                          cubit.addItems(selectedItems);
+                        }
+                      },
+                    ),
+                  ],
+                );
+              }
+            },
+          ),
+          
+          // Total Amount Display
+          BlocBuilder<ItemsCubit, ItemsState>(
+            builder: (context, state) {
+              final total = context.read<ItemsCubit>().getTotalAmount();
+              return Text(
+                'Total: ${total.toStringAsFixed(2)}\$',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              );
+            },
+          ),
 
 
 
@@ -348,3 +351,48 @@ BlocBuilder<BusinessCubit, BusinessState>(
 
 
 
+class ItemsCubit extends Cubit<ItemsState> {
+  ItemsCubit() : super(ItemsState.initial());
+
+  void addItems(List<ItemModel> items) {
+    final updatedItems = List<ItemModel>.from(state.selectedItems);
+    updatedItems.addAll(items);
+    emit(state.copyWith(selectedItems: updatedItems));
+  }
+
+  void removeItem(ItemModel item) {
+    final updatedItems = List<ItemModel>.from(state.selectedItems);
+    updatedItems.remove(item);
+    emit(state.copyWith(selectedItems: updatedItems));
+  }
+
+  void clearAllItems() {
+    emit(state.copyWith(selectedItems: []));
+  }
+
+  double getTotalAmount() {
+    return state.selectedItems.fold(
+      0.0,
+      (sum, item) => sum + ((item.unitPrice ?? 0) * (item.quantity ?? 1)),
+    );
+  }
+}
+
+
+class ItemsState {
+  final List<ItemModel> selectedItems;
+
+  const ItemsState({required this.selectedItems});
+
+  factory ItemsState.initial() {
+    return const ItemsState(selectedItems: []);
+  }
+
+  ItemsState copyWith({
+    List<ItemModel>? selectedItems,
+  }) {
+    return ItemsState(
+      selectedItems: selectedItems ?? this.selectedItems,
+    );
+  }
+}

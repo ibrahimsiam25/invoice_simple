@@ -6,8 +6,8 @@ import 'package:invoice_simple/features/settings/ui/widgets/add_item_view_body.d
 import 'package:invoice_simple/features/settings/ui/widgets/new_item_bottom_sheet.dart';
 
 class AddItemView extends StatefulWidget {
-  const AddItemView({super.key, this.onSaved});
-  final Function(List<ItemModel>  item)? onSaved;
+  const AddItemView({super.key, this.clickable=false});
+   final bool clickable;
   static const String routeName = '/add-item-view';
 
   @override
@@ -46,7 +46,7 @@ class _AddItemViewState extends State<AddItemView> {
         },
       ),
       body: AddItemViewBody(
-        onSaved: widget.onSaved,
+        clickable: widget.clickable,
         myController: myController),
     );
   }

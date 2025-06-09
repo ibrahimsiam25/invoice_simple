@@ -43,6 +43,7 @@ abstract class AppRouter {
                 providers: [
                   BlocProvider(create: (context) => BusinessCubit()),
                   BlocProvider(create: (context) => ClientCubit()),
+                  BlocProvider(create: (context) => ItemsCubit()),
                 ],
                 child: NewInvoiceView(),
               ),
@@ -83,7 +84,7 @@ abstract class AppRouter {
           path: AddItemView.routeName,
           builder:
               (context, state) => AddItemView(
-                onSaved: (state.extra as Function(List<ItemModel> item)?),
+                clickable: state.extra as bool? ?? false,
               ),
         ),
         GoRoute(

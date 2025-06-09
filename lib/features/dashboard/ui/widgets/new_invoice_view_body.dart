@@ -9,7 +9,6 @@ import 'package:invoice_simple/core/theme/app_text_styles.dart';
 import 'package:invoice_simple/core/widgets/build_message_bar.dart';
 import 'package:invoice_simple/core/widgets/filled_text_button.dart';
 import 'package:invoice_simple/features/dashboard/data/models/invoice_model.dart';
-import 'package:invoice_simple/features/dashboard/ui/screens/invoice_details_view.dart';
 import 'package:invoice_simple/features/dashboard/ui/widgets/add_row_button.dart';
 import 'package:invoice_simple/features/dashboard/ui/widgets/custom_select_item.dart';
 import 'package:invoice_simple/features/dashboard/ui/widgets/invoice_header_row.dart';
@@ -42,7 +41,6 @@ class _NewInvoiceViewBodyState extends State<NewInvoiceViewBody> {
 @override
 void initState() {
   super.initState();
-    print("*********************************initState called");
   _loadInvoiceData();
 }
 
@@ -190,7 +188,7 @@ SharedPrefHelper.setData(
             SectionLabel(label: 'Items'),
             if (selectedItems.isEmpty)
               AddRowButton(
-                text: "Add Item",
+                text: "Add Items",
                 onTap: () {
                   context.push(
                     AddItemView.routeName,
@@ -206,18 +204,39 @@ SharedPrefHelper.setData(
               )
             else
               Column(
-                children: selectedItems.map((item) {
-                  return CustomSelectItem(
-                    text: item.name ?? 'Unknown Item',
-                    onPressed: () {
+                children: [
+                  Column(
+                    children: selectedItems.map((item) {
+                      return CustomSelectItem(
+                        text: item.name ?? 'Unknown Item',
+                        onPressed: () {
+                          setState(() {
+                            selectedItems.remove(item);
+                                updateTotalAmount();
+                  
+                          });
+                        },
+                      );
+                    }).toList(),
+                  ),
+                  SizedBox(height: 10),
+                  AddRowButton(
+                text: "Add another Items",
+                onTap: () {
+                  selectedItems =[];
+                  context.push(
+                    AddItemView.routeName,
+                    extra: (List<ItemModel> item) {
                       setState(() {
-                        selectedItems.remove(item);
-                            updateTotalAmount();
-
+                     
+                        selectedItems.addAll(item);
+                          updateTotalAmount();
                       });
                     },
                   );
-                }).toList(),
+                },
+              )
+                ],
               ),
             SizedBox(height: 14),
             // Summary

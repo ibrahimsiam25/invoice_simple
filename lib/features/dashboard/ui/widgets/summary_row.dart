@@ -55,8 +55,8 @@ final String currency ;
           ), 
           const SizedBox(width: 10),
           Text(
-            "0,00 \$",
-           style: AppTextStyles.poFont20BlackWh600.copyWith(
+            "$totalAmount \$",
+            style: AppTextStyles.poFont20BlackWh600.copyWith(
               fontSize: 12.sp,
         
             )

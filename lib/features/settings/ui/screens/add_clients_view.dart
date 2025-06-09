@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:invoice_simple/core/theme/app_colors.dart';
 import 'package:invoice_simple/core/widgets/custom_text_and_icon_back_appbar.dart';
+import 'package:invoice_simple/features/settings/data/model/client_model.dart';
 import 'package:invoice_simple/features/settings/ui/widgets/add_clients_view_body.dart';
 import 'package:invoice_simple/features/settings/ui/widgets/new_client_bottom_sheet.dart';
 
 class AddClientsView extends StatefulWidget {
-  const AddClientsView({super.key});
+  const AddClientsView({super.key, this.onSaved});
+  final Function(ClientModel client)? onSaved;
   static const String routeName = '/add-clients';
 
   @override
@@ -43,7 +45,9 @@ class _AddClientsViewState extends State<AddClientsView> {
           );
         },
       ),
-      body: AddClientsViewBody(myController: myController),
+      body: AddClientsViewBody(
+        onSaved: widget.onSaved,
+        myController: myController),
     );
   }
 }

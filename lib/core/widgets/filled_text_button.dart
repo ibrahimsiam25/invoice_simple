@@ -5,8 +5,8 @@ import 'package:invoice_simple/core/theme/app_text_styles.dart';
 
 class FilledTextButton extends StatelessWidget {
   const FilledTextButton({
-    super.key, required this.text, this.onPressed,
-this.color,
+    super.key, required this.text, required this.onPressed,
+    this.color,
   });
 final String text ;
  final VoidCallback? onPressed;

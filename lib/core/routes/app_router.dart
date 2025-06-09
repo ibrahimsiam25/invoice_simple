@@ -4,6 +4,9 @@ import 'package:invoice_simple/features/dashboard/ui/screens/invoice_dashboard_v
 import 'package:invoice_simple/features/dashboard/ui/screens/invoice_details_view.dart';
 import 'package:invoice_simple/features/dashboard/ui/screens/new_invoice_view.dart';
 import 'package:invoice_simple/features/onboarding/ui/screens/onboarding_view.dart';
+import 'package:invoice_simple/features/settings/data/model/business_user_model.dart';
+import 'package:invoice_simple/features/settings/data/model/client_model.dart';
+import 'package:invoice_simple/features/settings/data/model/item_model.dart';
 import 'package:invoice_simple/features/settings/ui/screens/add_clients_view.dart';
 import 'package:invoice_simple/features/settings/ui/screens/add_item_view.dart';
 import 'package:invoice_simple/features/settings/ui/screens/add_new_business_view.dart';
@@ -14,7 +17,7 @@ import 'package:invoice_simple/features/settings/ui/screens/signature_view.dart'
 abstract class AppRouter {
   static GoRouter getRouter(bool isNotFirstLogin) {
     return GoRouter(
-      initialLocation: AddClientsView.routeName,
+      initialLocation:NewInvoiceView.routeName,
       //  isNotFirstLogin
       //     ? InvoiceDashboardView.routeName
       //     : OnBoardingView.routeName,
@@ -47,7 +50,9 @@ abstract class AppRouter {
         ),
         GoRoute(
           path: BusinessView.routeName,
-          builder: (context, state) => const BusinessView(),
+          builder: (context, state) =>  BusinessView(
+  onSaved: (state.extra as Function(BusinessUserModel business)?),
+          ), 
         ),
         GoRoute(
           path: AddNewBusinessView.routeName,
@@ -62,11 +67,15 @@ abstract class AppRouter {
         ),
         GoRoute(
           path: AddItemView.routeName,
-          builder: (context, state) => const AddItemView(),
+          builder: (context, state) =>  AddItemView(
+            onSaved: (state.extra as Function(List<ItemModel> item)?),
+          ),
         ),
         GoRoute(
           path: AddClientsView.routeName,
-          builder: (context, state) => const AddClientsView(),
+          builder: (context, state) =>  AddClientsView(
+            onSaved: (state.extra as Function(ClientModel client)?),
+          ),
         ),
       ],
     );

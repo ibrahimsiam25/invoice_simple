@@ -12,8 +12,9 @@ class AddClientsViewBody extends StatefulWidget {
   const AddClientsViewBody({
     super.key,
     required this.myController,
+    this.onSaved,
   });
-
+  final Function(ClientModel client)? onSaved;
   final TextEditingController myController;
 
   @override
@@ -61,7 +62,7 @@ class _AddClientsViewBodyState extends State<AddClientsViewBody> {
                 final filteredClients = searchText.isEmpty
                     ? clients
                     : clients.where((client) =>
-                        (client.clientName ?? '')
+                        (client.clientName )
                             .toLowerCase()
                             .contains(searchText)
                       ).toList();
@@ -86,10 +87,18 @@ class _AddClientsViewBodyState extends State<AddClientsViewBody> {
                   itemBuilder: (context, index) {
                     final client = filteredClients[index];
                     return ListTile(
-                      title: Text(
-                        client.clientName ?? '',
-                        style: AppTextStyles.poFont20BlackWh400.copyWith(
-                          fontSize: 14.sp,
+                      title: GestureDetector(
+                        onTap: () {
+                          if (widget.onSaved != null) {
+                            widget.onSaved!(client);
+                            Navigator.of(context).pop();
+                          }
+                        },
+                        child: Text(
+                          client.clientName,
+                          style: AppTextStyles.poFont20BlackWh400.copyWith(
+                            fontSize: 14.sp,
+                          ),     
                         ),
                       ),
                     );

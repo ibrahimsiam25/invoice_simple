@@ -7,9 +7,9 @@ import 'package:invoice_simple/features/settings/ui/widgets/business_user.dart';
 class BusinessViewBody extends StatelessWidget {
   const BusinessViewBody({
     super.key,
-    required this.users,
+    required this.users, this.onSaved,
   });
-
+  final Function(BusinessUserModel business)? onSaved;
   final List<BusinessUserModel> users;
 
   @override
@@ -45,6 +45,7 @@ class BusinessViewBody extends StatelessWidget {
       itemCount: users.length,
       separatorBuilder: (_, __) => const SizedBox(height: 12),
       itemBuilder: (context, index) => BusinessUser(
+        onSaved: onSaved,
         user: users[index],
       ),
     );

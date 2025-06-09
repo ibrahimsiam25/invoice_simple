@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:invoice_simple/core/helpers/app_constants.dart';
 import 'package:invoice_simple/core/theme/app_colors.dart';
@@ -14,14 +13,13 @@ import 'package:invoice_simple/features/settings/ui/screens/add_new_business_vie
 import 'package:invoice_simple/features/settings/ui/widgets/business_view_body.dart';
 
 class BusinessView extends StatelessWidget {
-  const BusinessView({super.key});
+  const BusinessView({super.key, required this.onSaved});
+   final Function(BusinessUserModel business)? onSaved;
   static const String routeName = "/business";
 
   @override
   Widget build(BuildContext context) {
-    // افتح الصندوق المناسب
     final box = Hive.box<BusinessUserModel>(AppConstants.hiveBusinessBox);
-
     return CustomScaffold(
       backgroundColor: AppColors.background,
       appBar: CusotmTextBackAppbar(
@@ -41,7 +39,9 @@ class BusinessView extends StatelessWidget {
         valueListenable: box.listenable(),
         builder: (context, Box<BusinessUserModel> box, _) {
           final users = box.values.toList();
-          return BusinessViewBody(users: users);
+          return BusinessViewBody(
+            onSaved: onSaved, 
+            users: users);
         },
       ),
     );

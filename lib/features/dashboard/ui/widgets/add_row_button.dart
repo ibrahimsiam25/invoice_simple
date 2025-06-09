@@ -21,10 +21,10 @@ class AddRowButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: AppColors.white,
-      borderRadius: BorderRadius.circular(10),
+      borderRadius: BorderRadius.circular(5),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(5),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           child: Stack(
@@ -58,5 +58,3 @@ class AddRowButton extends StatelessWidget {
     );
   }
 }
-
-// Replace AppColors.white with your own color system if needed.

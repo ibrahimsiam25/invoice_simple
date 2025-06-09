@@ -10,68 +10,77 @@ class BusinessUser extends StatelessWidget {
   final BusinessUserModel user;
   const BusinessUser({
     super.key,
-    required this.user,
+    required this.user, this.onSaved,
   });
-
+  final Function(BusinessUserModel business)? onSaved;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(12),
+    return InkWell(
+      onTap: () {
+        if (onSaved != null) {
+         
+          onSaved!(user);
+            Navigator.pop(context);
+        }
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        child: Row(
+          children: [
+            // Avatar
+        Container(
+        width: 50,
+        height: 50,
+        decoration: const BoxDecoration(
+      color: AppColors.primary,
+      shape: BoxShape.circle,
+        ),
+        child: user.imageLogo != null
+        ? ClipOval(
+      child: Image.file(
+        File(user.imageLogo!),
+        width: 50,
+        height: 50,
+        fit: BoxFit.cover,
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-      child: Row(
-        children: [
-          // Avatar
-      Container(
-  width: 50,
-  height: 50,
-  decoration: const BoxDecoration(
-    color: AppColors.primary,
-    shape: BoxShape.circle,
-  ),
-  child: user.imageLogo != null
-      ? ClipOval(
-    child: Image.file(
-      File(user.imageLogo!),
-      width: 50,
-      height: 50,
-      fit: BoxFit.cover,
-    ),
-  )
-      : const Icon(Icons.person, color: AppColors.white, size: 32),
-),
-          const SizedBox(width: 14),
-          // Name and Email
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  user.name??"",
-                  style: AppTextStyles.poFont20BlackWh600.copyWith(fontSize: 14),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  user.email??"",
-                  style: AppTextStyles.poFont20BlackWh400.copyWith(
-                    fontSize: 12,
-                    decoration: TextDecoration.underline,
+        )
+        : const Icon(Icons.person, color: AppColors.white, size: 32),
+      ),
+            const SizedBox(width: 14),
+            // Name and Email
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    user.name,
+                    style: AppTextStyles.poFont20BlackWh600.copyWith(fontSize: 14),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 2),
+                  Text(
+                    user.email??"",
+                    style: AppTextStyles.poFont20BlackWh400.copyWith(
+                      fontSize: 12,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          // More icon with custom popup menu
-          MoreMenu(
-             onDelete: () async {
-       
-    await user.delete();
-
-  } 
-          ),
-        ],
+            // More icon with custom popup menu
+            MoreMenu(
+               onDelete: () async {
+         
+      await user.delete();
+      
+        } 
+            ),
+          ],
+        ),
       ),
     );
   }

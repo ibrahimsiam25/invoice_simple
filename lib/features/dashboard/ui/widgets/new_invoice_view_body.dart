@@ -14,6 +14,7 @@ import 'package:invoice_simple/features/dashboard/ui/cubit/business_cubit.dart';
 import 'package:invoice_simple/features/dashboard/ui/cubit/client_cubit.dart';
 import 'package:invoice_simple/features/dashboard/ui/cubit/items_cubit.dart';
 import 'package:invoice_simple/features/dashboard/ui/screens/inoice_preview_view.dart';
+import 'package:invoice_simple/features/dashboard/ui/screens/invoice_details_view.dart';
 import 'package:invoice_simple/features/dashboard/ui/widgets/add_row_button.dart';
 import 'package:invoice_simple/features/dashboard/ui/widgets/custom_select_item.dart';
 import 'package:invoice_simple/features/dashboard/ui/widgets/invoice_header_row.dart';
@@ -37,7 +38,7 @@ class NewInvoiceViewBody extends StatefulWidget {
 }
 
 class NewInvoiceViewBodyState extends State<NewInvoiceViewBody> {
-  String invoiceNumber = "001";
+  int invoiceNumber = 1;
   File? logoImage;
   BusinessUserModel? get selectedBusiness => 
       context.read<BusinessCubit>().state.selectedBusiness;
@@ -55,7 +56,7 @@ class NewInvoiceViewBodyState extends State<NewInvoiceViewBody> {
       context.read<BusinessCubit>().state.currency ;
 
   void onPreview() {
-    // ✅ Using values from Cubits
+ 
     if (selectedBusiness == null ||
         selectedClient == null ||
         selectedItems.isEmpty) {
@@ -96,11 +97,11 @@ class NewInvoiceViewBodyState extends State<NewInvoiceViewBody> {
     if (count == 0) {
       count = 1;
     }
-    final invNumber = count.toString().padLeft(3, '0');
+  
 
     if (mounted) {
       setState(() {
-        invoiceNumber = invNumber;
+        invoiceNumber = count;
       });
     }
   }
@@ -134,10 +135,13 @@ class NewInvoiceViewBodyState extends State<NewInvoiceViewBody> {
     await box.add(newInvoice);
     SharedPrefHelper.setData(
       AppConstants.prefsInvoiceNumber,
-      int.parse(invoiceNumber) + 1,
+      invoiceNumber + 1,
     );
     buildMessageBar(context, "Invoice saved successfully!");
-  
+   context.pushReplacement(
+      InvoiceDetailsView.routeName,
+      extra: newInvoice,
+    );
   }
 
   @override
@@ -165,7 +169,7 @@ class NewInvoiceViewBodyState extends State<NewInvoiceViewBody> {
             InvoiceHeaderRow(
               issued: DateFormat("d MMM yyyy").format(DateTime.now()),
               due: "-",
-              number: invoiceNumber,
+              number: invoiceNumber.toString().padLeft(3, '0')
             ),
             SizedBox(height: 18),
             
@@ -274,7 +278,7 @@ class NewInvoiceViewBodyState extends State<NewInvoiceViewBody> {
                         text: "Add another Items",
                         onTap: () async {
                           final cubit = context.read<ItemsCubit>();
-                          cubit.clearAllItems(); // ✅ Fixed method name
+                          cubit.clearAllItems(); 
                           
                           final selectedItems = await context.push<List<ItemModel>>(
                             AddItemView.routeName,

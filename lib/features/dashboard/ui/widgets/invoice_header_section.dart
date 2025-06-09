@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:invoice_simple/core/helpers/app_constants.dart';
 import 'package:invoice_simple/core/theme/app_colors.dart';
 import 'package:invoice_simple/core/theme/app_text_styles.dart';
+import 'package:invoice_simple/features/dashboard/data/models/invoice_model.dart';
 
 enum PaymentMethod { cash, check, bank, paypal }
 
 class InvoiceHeaderSection extends StatelessWidget {
   final bool isPaid;
   final PaymentMethod? paymentMethod;
-  final double amount;
-
+  final InvoiceModel invoice;
+  final VoidCallback onAddReceivedPayment;
   const InvoiceHeaderSection({
     super.key,
     required this.isPaid,
     this.paymentMethod,
-    required this.amount,
+    required this.invoice,
+   required this.onAddReceivedPayment,
   });
 
   @override
@@ -77,7 +80,7 @@ class InvoiceHeaderSection extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Yulia Kartavenko',
+                                    invoice.businessAccount.name,
                                       style: AppTextStyles.poFont20BlackWh600
                                           .copyWith(fontSize: 10.sp),
                                     ),
@@ -110,7 +113,7 @@ class InvoiceHeaderSection extends StatelessWidget {
                                     ),
                                     const SizedBox(height: 2),
                                     Text(
-                                      '#001',
+                                      "#${invoice.invoiceNumber.toString().padLeft(3, '0')}",
                                       style: AppTextStyles.poFont20BlackWh400
                                           .copyWith(
                                             fontSize: 8.sp,
@@ -118,7 +121,7 @@ class InvoiceHeaderSection extends StatelessWidget {
                                           ),
                                     ),
                                     Text(
-                                      'Issued 05/05/2025',
+                                      'Issued ${DateFormat('dd/MM/yyyy').format(invoice.issuedDate)}',
                                       style: AppTextStyles.poFont20BlackWh400
                                           .copyWith(
                                             fontSize: 8.sp,
@@ -236,7 +239,7 @@ class InvoiceHeaderSection extends StatelessWidget {
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                "Jul", // يمكنك حساب الشهر الحالي أو من تاريخ الدفع
+                                "${DateFormat('MMMM').format(invoice.issuedDate)}",
                                 style: AppTextStyles.poFont20BlackWh400
                                     .copyWith(
                                       color: AppColors.blueGrey,
@@ -246,7 +249,7 @@ class InvoiceHeaderSection extends StatelessWidget {
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                "${amount.toStringAsFixed(2)} \$",
+                                "${invoice.total.toStringAsFixed(2)} \$",
                                 style: TextStyle(
                                   color: AppColors.black,
                                   fontSize: 32,
@@ -268,7 +271,7 @@ class InvoiceHeaderSection extends StatelessWidget {
                               ),
                               SizedBox(height: 7.h),
                               Text(
-                                '${amount.toStringAsFixed(2)} \$',
+                                '${invoice.total.toStringAsFixed(2)} \$',
                                 style: AppTextStyles.poFont20BlackWh600
                                     .copyWith(fontSize: 28.sp),
                                 textAlign: TextAlign.center,
@@ -289,7 +292,7 @@ class InvoiceHeaderSection extends StatelessWidget {
                                   ),
                                   foregroundColor: AppColors.black,
                                 ),
-                                onPressed: () {},
+                                onPressed: onAddReceivedPayment,
                                 child: Text(
                                   '+ Add Receivesd Payment',
                                   style: AppTextStyles.poFont20BlackWh400

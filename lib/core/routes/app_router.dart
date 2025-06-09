@@ -57,7 +57,9 @@ abstract class AppRouter {
         ),
         GoRoute(
           path: InvoiceDetailsView.routeName,
-          builder: (context, state) => const InvoiceDetailsView(),
+          builder: (context, state) =>  InvoiceDetailsView(
+            invoice: state.extra as InvoiceModel,
+          ),
         ),
         //ToDo: -----------------Settings View-----------------
         GoRoute(

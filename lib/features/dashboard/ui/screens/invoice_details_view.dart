@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+import 'package:invoice_simple/core/functions/update_invoice_by_number.dart';
 import 'package:invoice_simple/core/helpers/app_assets.dart';
 import 'package:invoice_simple/core/helpers/app_constants.dart';
 import 'package:invoice_simple/core/theme/app_colors.dart';
 import 'package:invoice_simple/core/theme/app_text_styles.dart';
 import 'package:invoice_simple/core/widgets/filled_text_button.dart';
+import 'package:invoice_simple/features/dashboard/data/models/invoice_model.dart';
+import 'package:invoice_simple/features/dashboard/ui/screens/inoice_preview_view.dart';
 import 'package:invoice_simple/features/dashboard/ui/widgets/invoice_details_view_app_bar.dart';
 import 'package:invoice_simple/features/dashboard/ui/widgets/invoice_header_section.dart';
 import 'package:invoice_simple/features/dashboard/ui/widgets/payment_method.dart';
@@ -12,9 +17,9 @@ import 'package:svg_flutter/svg.dart';
 
 
 class InvoiceDetailsView extends StatefulWidget {
-  const InvoiceDetailsView({super.key});
+  const InvoiceDetailsView({super.key, required this.invoice});
   static const String routeName = '/invoice-details';
-
+final InvoiceModel invoice;
   @override
   State<InvoiceDetailsView> createState() => _InvoiceDetailsViewState();
 }
@@ -22,13 +27,17 @@ class InvoiceDetailsView extends StatefulWidget {
 class _InvoiceDetailsViewState extends State<InvoiceDetailsView> {
   bool isPaid = false;
   PaymentMethod? selectedMethod;
-  double amount = 2000.00; // اجعلها ديناميكية حسب بياناتك
+ 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: InvoiceDetailsViewAppBar(),
+      appBar: InvoiceDetailsViewAppBar(
+        onMorePressed: () {
+          context.push(InvoicePreviewView.routeName, extra: widget.invoice);
+        },
+      ),
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -38,9 +47,12 @@ class _InvoiceDetailsViewState extends State<InvoiceDetailsView> {
               children: [
                 // Header Section
                 InvoiceHeaderSection(
+                  invoice: widget.invoice,
                   isPaid: isPaid,
+                  onAddReceivedPayment: () {
+                   
+                  },
                   paymentMethod: selectedMethod,
-                  amount: amount,
                 ),
                 const SizedBox(height: 20),
                 // Invoice Status Section
@@ -49,17 +61,39 @@ class _InvoiceDetailsViewState extends State<InvoiceDetailsView> {
                     horizontal: AppConstants.paddingHorizontal,
                   ),
                   child: InvoiceStatusSection(
-                    onPaymentMethodSelected: (method) {
+                    onPaymentMethodSelected: (method) async{
                       setState(() {
                         isPaid = true;
                         selectedMethod = method;
                       });
+                      String paymentMethodText() {
+      switch (selectedMethod) {
+        case PaymentMethod.cash:
+          return "Cash";
+        case PaymentMethod.check:
+          return "Check";
+        case PaymentMethod.bank:
+          return "Bank";
+        case PaymentMethod.paypal:
+          return "PayPal";
+        default:
+          return "";
+      }
+    }
+                      await updateInvoiceByNumber(
+                        invoiceNumber:  widget.invoice.invoiceNumber,
+                        updatedInvoice: widget.invoice.copyWith(
+    paymentMethod:  paymentMethodText(),
+  ),
+                      );
                     },
                   ),
                 ),
                 const SizedBox(height: 20),
                 // Invoice Details Section
-                _buildInvoiceDetailsSection(),
+                _buildInvoiceDetailsSection(
+                  widget.invoice,
+                ),
                 const SizedBox(height: 20),
               ],
             ),
@@ -69,7 +103,7 @@ class _InvoiceDetailsViewState extends State<InvoiceDetailsView> {
             left: 0,
             right: 0,
             bottom: 0,
-            child: _buildActionButtonsSection(context),
+            child: _buildActionButtonsSection(context, widget.invoice),
           ),
         ],
       ),
@@ -78,7 +112,7 @@ class _InvoiceDetailsViewState extends State<InvoiceDetailsView> {
 }
 
   // Invoice Details Section
-  Widget _buildInvoiceDetailsSection() {
+  Widget _buildInvoiceDetailsSection(InvoiceModel invoice) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: AppConstants.paddingHorizontal),
       child: Column(
@@ -93,7 +127,7 @@ class _InvoiceDetailsViewState extends State<InvoiceDetailsView> {
                 ),
               ),
               Text(
-                '5 may 2025',
+                DateFormat('dd/MM/yyyy').format(invoice.issuedDate),
                 style: AppTextStyles.poFont20BlackWh400.copyWith(
                   color: AppColors.blueGrey,
                   fontSize: 14.sp,
@@ -114,7 +148,7 @@ class _InvoiceDetailsViewState extends State<InvoiceDetailsView> {
                 ),
               ),
               Text(
-                '003',
+                invoice.invoiceNumber.toString().padLeft(3, '0'),
                 style: AppTextStyles.poFont20BlackWh400.copyWith(
                   color: AppColors.blueGrey,
                   fontSize: 14.sp,
@@ -127,8 +161,7 @@ class _InvoiceDetailsViewState extends State<InvoiceDetailsView> {
     );
   }
 
-  // Action Buttons Section
-  Widget _buildActionButtonsSection(BuildContext context) {
+  Widget _buildActionButtonsSection(BuildContext context, InvoiceModel invoice) {
     return Container(
       height: 176.h,
       width: double.infinity,
@@ -192,9 +225,10 @@ class _InvoiceDetailsViewState extends State<InvoiceDetailsView> {
               showDeleteInvoiceSheet(
                 context,
                 onDelete: () {
-                  // Handle delete action here
-                  Navigator.pop(context); // Close the bottom sheet
-                  // You can also navigate back or show a confirmation message
+                  deleteInvoiceByNumber(
+                    invoiceNumber: invoice.invoiceNumber,
+                  );
+                  Navigator.pop(context);
                 },
               );
             },

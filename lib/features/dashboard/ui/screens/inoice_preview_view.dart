@@ -16,7 +16,9 @@ class InvoicePreviewView extends StatelessWidget {
     return CustomScaffold(
       backgroundColor: AppColors.background,
       appBar: CustomInvoicePreviewAppBar(),
-      body: InvoicePreviewViewBody(),
+      body: InvoicePreviewViewBody(
+        invoice: invoice,
+      ),
     );
   }
 }

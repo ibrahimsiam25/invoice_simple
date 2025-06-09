@@ -1,23 +1,25 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:invoice_simple/core/theme/app_colors.dart';
 import 'package:invoice_simple/core/theme/app_text_styles.dart';
+import 'package:invoice_simple/features/dashboard/data/models/invoice_model.dart';
 import 'package:invoice_simple/features/dashboard/ui/widgets/invoice_table_row.dart';
 
 class InvoicePreviewViewBody extends StatelessWidget {
   const InvoicePreviewViewBody({
-    super.key,
+    super.key,required this.invoice,
   });
-
+final InvoiceModel invoice;
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+      return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Container(
           decoration: BoxDecoration(
             color: AppColors.white,
-            borderRadius: BorderRadius.circular(5.r),
+            borderRadius: BorderRadius.circular(5),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 23),
           child: Column(
@@ -28,9 +30,9 @@ class InvoicePreviewViewBody extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      "Yulia Kartavenko",
+                      invoice.businessAccount.name,
                       style: AppTextStyles.poFont20BlackWh600.copyWith(
-                        fontSize: 14.sp
+                        fontSize: 14,
                       ),
                     ),
                   ),
@@ -40,23 +42,23 @@ class InvoicePreviewViewBody extends StatelessWidget {
                       Text(
                         'INVOICE',
                         style: AppTextStyles.poFont20BlackWh600.copyWith(
-                        fontSize: 14.sp
-                      ),
+                          fontSize: 14,
+                        ),
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        "#001",
+                        "#${invoice.invoiceNumber.toString().padLeft(3, '0')}",
                         style: AppTextStyles.poFont20BlackWh400.copyWith(
-                          color: AppColors.extraLightGrey,
-                          fontSize: 12.sp,
+                          color: AppColors.blueGrey,
+                          fontSize: 12,
                         ),
                       ),
                       const SizedBox(height: 10),
                       Text(
-                        "Issued 05/05/2025",
+                        "Issued ${DateFormat('dd/MM/yyyy').format(invoice.issuedDate)}",
                         style: AppTextStyles.poFont20BlackWh400.copyWith(
                           color: AppColors.grey,
-                          fontSize: 12.sp,
+                          fontSize: 12,
                         ),
                       ),
                     ],
@@ -71,35 +73,35 @@ class InvoicePreviewViewBody extends StatelessWidget {
                   Text(
                     "FROM",
                     style: AppTextStyles.poFont20BlackWh600.copyWith(
-                      fontSize: 14.sp,
+                      fontSize: 14,
                     ),
                   ),
                   const Spacer(),
                   Text(
                     "BILL TO",
-                      style: AppTextStyles.poFont20BlackWh600.copyWith(
-                      fontSize: 14.sp,
+                    style: AppTextStyles.poFont20BlackWh600.copyWith(
+                      fontSize: 14,
                     ),
                   ),
                   const SizedBox(width: 16),
                   Text(
-                    "Ivan Ivanov",
-                   style: AppTextStyles.poFont20BlackWh600.copyWith(
-                      fontSize: 14.sp,
+                    invoice.client.clientName,
+                    style: AppTextStyles.poFont20BlackWh600.copyWith(
+                      fontSize: 14,
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 8),
-              // From name
+              // From name (business account name)
               Text(
-                "Yulia Kartavenko",
-                 style: AppTextStyles.poFont20BlackWh600.copyWith(
-                      fontSize: 12.sp,
-                    ),
+                invoice.businessAccount.name,
+                style: AppTextStyles.poFont20BlackWh600.copyWith(
+                  fontSize: 12,
+                ),
               ),
-              SizedBox(height: 5.h),
-    
+              const SizedBox(height: 8),
+              // Table header row
               InvoiceTableRow(
                 backgroundColor: AppColors.extraLightGrey,
                 height: 44,
@@ -109,9 +111,9 @@ class InvoicePreviewViewBody extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       child: Text(
-                        "Description",
+                        "Name",
                         style: AppTextStyles.poFont20BlackWh600.copyWith(
-                          fontSize: 10.sp,
+                          fontSize: 10,
                         ),
                       ),
                     ),
@@ -119,35 +121,65 @@ class InvoicePreviewViewBody extends StatelessWidget {
                   Text(
                     "QTY",
                     style: AppTextStyles.poFont20BlackWh600.copyWith(
-                      fontSize: 10.sp,
+                      fontSize: 10,
                     ),
                   ),
                   Text(
-                    "Price, UAH",
+                    "Price, ${invoice.currency}",
                     style: AppTextStyles.poFont20BlackWh600.copyWith(
-                      fontSize: 10.sp,
+                      fontSize: 10,
                     ),
                   ),
                   Text(
-                    "Amount, UAH",
+                    "Amount, ${invoice.currency}",
                     style: AppTextStyles.poFont20BlackWh600.copyWith(
-                      fontSize: 10.sp,
-    
+                      fontSize: 10,
                     ),
                   ),
                 ],
               ),
-              // Table Empty Row
-              InvoiceTableRow(
-                height: 44,
-                showBottomBorder: true,
-                children: [
-                  Container(),
-                  Container(),
-                  Container(),
-                  Container(),
-                ],
-              ),
+        Column(
+  children: invoice.items.map((item) {
+    final qty = item.quantity ?? 0;
+    final price = item.unitPrice ?? 0.0;
+    final amount = qty * price;
+
+    return InvoiceTableRow(
+      height: 44,
+      showBottomBorder: true,
+      children: [
+        // اسم العنصر
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Text(
+            item.name ?? '',
+                  overflow: TextOverflow.ellipsis,
+            style: AppTextStyles.poFont20BlackWh400.copyWith(fontSize: 10),
+          ),
+        ),
+        // الكمية
+        Text(
+          qty.toString(),
+                overflow: TextOverflow.ellipsis,
+          style: AppTextStyles.poFont20BlackWh400.copyWith(fontSize: 10),
+        ),
+        // السعر
+        Text(
+          price.toStringAsFixed(2),
+          overflow: TextOverflow.ellipsis,
+          style: AppTextStyles.poFont20BlackWh400.copyWith(fontSize: 10),
+        ),
+        // المجموع = كمية * سعر
+        Text(
+          amount.toStringAsFixed(2),
+                overflow: TextOverflow.ellipsis,
+          style: AppTextStyles.poFont20BlackWh400.copyWith(fontSize: 10),
+        ),
+      ],
+    );
+  }).toList(),
+),
+
     
               // Total Row
               Row(
@@ -187,7 +219,12 @@ class InvoicePreviewViewBody extends StatelessWidget {
                         ),
                       ),
                       child: Text(
-                        "UAH 0.00",
+                      "${invoice.currency} ${invoice.items.fold<double>(0, (sum, item) {
+            final qty = item.quantity ?? 0;
+            final price = item.unitPrice ?? 0;
+            return sum + (qty * price);
+          }).toStringAsFixed(2)}",
+          overflow: TextOverflow.ellipsis,
                         style: AppTextStyles.poFont20BlackWh600.copyWith(
                           fontSize: 10.sp,
                         ),

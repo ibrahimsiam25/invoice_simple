@@ -18,20 +18,21 @@ class InvoiceModelAdapter extends TypeAdapter<InvoiceModel> {
     };
     return InvoiceModel(
       issuedDate: fields[0] as DateTime,
-      invoiceNumber: fields[1] as String,
+      invoiceNumber: fields[1] as int,
       businessAccount: fields[2] as BusinessUserModel,
       client: fields[3] as ClientModel,
       items: (fields[4] as List).cast<ItemModel>(),
       total: fields[5] as double,
       currency: fields[6] as String,
       imagePath: fields[7] as String,
+      paymentMethod: fields[8] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, InvoiceModel obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.issuedDate)
       ..writeByte(1)
@@ -47,7 +48,9 @@ class InvoiceModelAdapter extends TypeAdapter<InvoiceModel> {
       ..writeByte(6)
       ..write(obj.currency)
       ..writeByte(7)
-      ..write(obj.imagePath);
+      ..write(obj.imagePath)
+      ..writeByte(8)
+      ..write(obj.paymentMethod);
   }
 
   @override

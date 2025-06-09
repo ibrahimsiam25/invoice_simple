@@ -4,7 +4,6 @@ import 'package:invoice_simple/core/theme/app_colors.dart';
 import 'package:invoice_simple/core/theme/app_text_styles.dart';
 
 class CustomInvoiceTile extends StatelessWidget {
-  final String circleText;
   final Color circleColor;
   final String title;
   final String subtitle;
@@ -12,7 +11,6 @@ class CustomInvoiceTile extends StatelessWidget {
 
   const CustomInvoiceTile({
     super.key,
-    required this.circleText,
     required this.circleColor,
     required this.title,
     required this.subtitle,
@@ -30,7 +28,7 @@ class CustomInvoiceTile extends StatelessWidget {
           backgroundColor: circleColor,
           radius: 28.r,
           child: Text(
-            circleText,
+            title[0].toUpperCase(),
             style: AppTextStyles.poFont20BlackWh600,
           ),
         ),

@@ -84,8 +84,9 @@ Future<void> shareInvoice(InvoiceModel invoice, BuildContext context) async {
 
 
 
-Future<Uint8List> generateInvoicePdfBytes( InvoiceModel invoice) async{
-    final pdf = pw.Document();
+Future<Uint8List> generateInvoicePdfBytes(InvoiceModel invoice) async {
+  String? title = (invoice.isEstimated ?? false) ? 'ESTIMATE' : 'INVOICE';
+  final pdf = pw.Document();
   Uint8List? signatureBytes;
 
   if (invoice.businessAccount.imageSignature != null &&
@@ -149,7 +150,7 @@ final total = subtotal - totalDiscount + totalTax;
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
                 children: [
                    pw.Text(
-                        'INVOICE',
+                        title,
                         style: pw.TextStyle(
                           fontSize: 18,
                           fontWeight: pw.FontWeight.bold,

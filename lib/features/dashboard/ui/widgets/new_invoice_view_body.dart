@@ -31,8 +31,8 @@ import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 
 class NewInvoiceViewBody extends StatefulWidget {
-  const NewInvoiceViewBody({super.key});
-
+  const NewInvoiceViewBody({super.key, required this.isEstimate});
+  final bool isEstimate;
   @override
   State<NewInvoiceViewBody> createState() => NewInvoiceViewBodyState();
 }
@@ -130,6 +130,7 @@ class NewInvoiceViewBodyState extends State<NewInvoiceViewBody> {
       total: totalAmount, // ✅ From Cubit
       currency: currency, // ✅ From Cubit
       imagePath: logoImage?.path ?? '',
+      isEstimated: widget.isEstimate,
     );
 
     await box.add(newInvoice);

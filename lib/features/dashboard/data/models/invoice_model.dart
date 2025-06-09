@@ -33,9 +33,12 @@ class InvoiceModel extends HiveObject {
 
   @HiveField(7)
   String imagePath;
-@HiveField(8)
-String? paymentMethod;
 
+ @HiveField(8)
+ String? paymentMethod;
+
+@HiveField(9)
+  bool? isEstimated;
 
   InvoiceModel({
     required this.issuedDate,
@@ -48,6 +51,7 @@ String? paymentMethod;
     required this.currency,
     required this.imagePath,
     this.paymentMethod,
+    this.isEstimated ,
   });
   InvoiceModel copyWith({
     DateTime? issuedDate,
@@ -70,6 +74,7 @@ String? paymentMethod;
       currency: currency ?? this.currency,
       imagePath: imagePath ?? this.imagePath,
       paymentMethod: paymentMethod ?? this.paymentMethod,
+      isEstimated: isEstimated ?? isEstimated,
     );
   }
 }

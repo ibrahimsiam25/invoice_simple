@@ -9,21 +9,38 @@ import 'package:svg_flutter/svg.dart';
 
 
 
-
 class InvoiceStatusSection extends StatefulWidget {
-  const InvoiceStatusSection({super.key, this.onPaymentMethodSelected});
-  final void Function(PaymentMethod)? onPaymentMethodSelected; // هنا الكول باك
+  const InvoiceStatusSection({
+    super.key,
+    this.onPaymentMethodSelected,
+    this.initialPaymentMethod,
+    this.initialPaidDate, // الإضافة هنا
+  });
+  final void Function(PaymentMethod)? onPaymentMethodSelected;
+  final PaymentMethod? initialPaymentMethod;
+  final DateTime? initialPaidDate;
+
   @override
   State<InvoiceStatusSection> createState() => _InvoiceStatusSectionState();
 }
 
 class _InvoiceStatusSectionState extends State<InvoiceStatusSection> {
   bool isPaid = false;
-  bool showGreen = false; // لتغيير لون الزر أول مرة
   DateTime? paidDate;
   PaymentMethod? selectedMethod;
 
-void _showMarkAsPaidSheet() async {
+  @override
+  void initState() {
+    super.initState();
+    // لو فيه طريقة دفع ابتدائية، استخدمها
+    if (widget.initialPaymentMethod != null) {
+      selectedMethod = widget.initialPaymentMethod;
+      isPaid = true;
+      paidDate = widget.initialPaidDate ?? DateTime.now();
+    }
+  }
+
+  void _showMarkAsPaidSheet() async {
     final result = await showModalBottomSheet<Map<String, dynamic>>(
       context: context,
       isScrollControlled: true,
@@ -36,7 +53,6 @@ void _showMarkAsPaidSheet() async {
         paidDate = result['date'] as DateTime;
         selectedMethod = result['method'] as PaymentMethod;
       });
-      // استدعاء الكول باك إذا تم توفيره
       if (widget.onPaymentMethodSelected != null && selectedMethod != null) {
         widget.onPaymentMethodSelected!(selectedMethod!);
       }
@@ -61,24 +77,18 @@ void _showMarkAsPaidSheet() async {
             const Spacer(),
             GestureDetector(
               onTap: () {
-                if (!showGreen) {
-                  // أول ضغطة: البرتقالي يصبح أخضر
-                  setState(() => showGreen = true);
-                } else {
-                  // ثاني ضغطة: افتح البوتوم شيت
-                  _showMarkAsPaidSheet();
-                }
+                _showMarkAsPaidSheet();
               },
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 17, vertical: 7),
                 decoration: BoxDecoration(
-                  color: showGreen ? const Color.fromARGB(255, 81, 151, 76) : AppColors.primary, // برتقالي ثم أخضر
+                  color: AppColors.primary,
                   borderRadius: BorderRadius.circular(5),
                 ),
                 child: Text(
                   'Mark as Paid',
                   style: AppTextStyles.poFont20BlackWh400.copyWith(
-                    color: showGreen ? AppColors.black : AppColors.white,
+                    color: AppColors.white,
                     fontSize: 12.sp,
                   ),
                 ),
@@ -88,7 +98,6 @@ void _showMarkAsPaidSheet() async {
         ),
       );
     } else {
-      // عرض أنه تم الدفع مع التاريخ
       return Column(
         children: [
           Row(
@@ -113,7 +122,7 @@ void _showMarkAsPaidSheet() async {
               ),
             ],
           ),
-         Divider(color: AppColors.extraLightGreyDivder),
+          Divider(color: AppColors.extraLightGreyDivder),
         ],
       );
     }
@@ -131,7 +140,6 @@ void _showMarkAsPaidSheet() async {
     return months[month].toLowerCase();
   }
 }
-
 
 
 class MarkAsPaidBottomSheet extends StatefulWidget {

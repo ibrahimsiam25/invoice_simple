@@ -7,13 +7,11 @@ import 'package:invoice_simple/features/dashboard/data/models/invoice_model.dart
 import 'package:invoice_simple/features/dashboard/ui/widgets/invoice_table_row.dart';
 
 class InvoicePreviewViewBody extends StatelessWidget {
-  const InvoicePreviewViewBody({
-    super.key,required this.invoice,
-  });
-final InvoiceModel invoice;
+  const InvoicePreviewViewBody({super.key, required this.invoice});
+  final InvoiceModel invoice;
   @override
   Widget build(BuildContext context) {
-      return SingleChildScrollView(
+    return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Container(
@@ -96,9 +94,7 @@ final InvoiceModel invoice;
               // From name (business account name)
               Text(
                 invoice.businessAccount.name,
-                style: AppTextStyles.poFont20BlackWh600.copyWith(
-                  fontSize: 12,
-                ),
+                style: AppTextStyles.poFont20BlackWh600.copyWith(fontSize: 12),
               ),
               const SizedBox(height: 8),
               // Table header row
@@ -138,54 +134,62 @@ final InvoiceModel invoice;
                   ),
                 ],
               ),
-        Column(
-  children: invoice.items.map((item) {
-    final qty = item.quantity ?? 0;
-    final price = item.unitPrice ?? 0.0;
-    final amount = qty * price;
+              Column(
+                children:
+                    invoice.items.map((item) {
+                      final qty = item.quantity ?? 0;
+                      final price = item.unitPrice ?? 0.0;
+                      final amount = qty * price;
 
-    return InvoiceTableRow(
-      height: 44,
-      showBottomBorder: true,
-      children: [
-        // اسم العنصر
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: Text(
-            item.name ?? '',
-                  overflow: TextOverflow.ellipsis,
-            style: AppTextStyles.poFont20BlackWh400.copyWith(fontSize: 10),
-          ),
-        ),
-        // الكمية
-        Text(
-          qty.toString(),
-                overflow: TextOverflow.ellipsis,
-          style: AppTextStyles.poFont20BlackWh400.copyWith(fontSize: 10),
-        ),
-        // السعر
-        Text(
-          price.toStringAsFixed(2),
-          overflow: TextOverflow.ellipsis,
-          style: AppTextStyles.poFont20BlackWh400.copyWith(fontSize: 10),
-        ),
-        // المجموع = كمية * سعر
-        Text(
-          amount.toStringAsFixed(2),
-                overflow: TextOverflow.ellipsis,
-          style: AppTextStyles.poFont20BlackWh400.copyWith(fontSize: 10),
-        ),
-      ],
-    );
-  }).toList(),
-),
+                      return InvoiceTableRow(
+                        height: 44,
+                        showBottomBorder: true,
+                        children: [
+                          // اسم العنصر
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: Text(
+                              item.name ?? '',
+                              overflow: TextOverflow.ellipsis,
+                              style: AppTextStyles.poFont20BlackWh400.copyWith(
+                                fontSize: 10,
+                              ),
+                            ),
+                          ),
+                          // الكمية
+                          Text(
+                            qty.toString(),
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTextStyles.poFont20BlackWh400.copyWith(
+                              fontSize: 10,
+                            ),
+                          ),
+                          // السعر
+                          Text(
+                            price.toStringAsFixed(2),
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTextStyles.poFont20BlackWh400.copyWith(
+                              fontSize: 10,
+                            ),
+                          ),
+                          // المجموع = كمية * سعر
+                          Text(
+                            amount.toStringAsFixed(2),
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTextStyles.poFont20BlackWh400.copyWith(
+                              fontSize: 10,
+                            ),
+                          ),
+                        ],
+                      );
+                    }).toList(),
+              ),
 
-    
               // Total Row
               Row(
                 children: [
                   Expanded(
-                    flex: 6 + 2 + 3,
+                    flex: 6,
                     child: Container(
                       alignment: Alignment.centerRight,
                       padding: const EdgeInsets.symmetric(
@@ -210,21 +214,18 @@ final InvoiceModel invoice;
                       ),
                       decoration: BoxDecoration(
                         color: AppColors.white,
-                        border: Border.all(
-                          color: AppColors.lightGrey,
-                          width: 1,
-                        ),
+
                         borderRadius: BorderRadius.only(
                           bottomRight: Radius.circular(2),
                         ),
                       ),
                       child: Text(
-                      "${invoice.currency} ${invoice.items.fold<double>(0, (sum, item) {
-            final qty = item.quantity ?? 0;
-            final price = item.unitPrice ?? 0;
-            return sum + (qty * price);
-          }).toStringAsFixed(2)}",
-          overflow: TextOverflow.ellipsis,
+                        "${invoice.currency} ${invoice.items.fold<double>(0, (sum, item) {
+                          final qty = item.quantity ?? 0;
+                          final price = item.unitPrice ?? 0;
+                          return sum + (qty * price);
+                        }).toStringAsFixed(2)}",
+                        overflow: TextOverflow.ellipsis,
                         style: AppTextStyles.poFont20BlackWh600.copyWith(
                           fontSize: 10.sp,
                         ),
@@ -234,7 +235,6 @@ final InvoiceModel invoice;
                 ],
               ),
               const SizedBox(height: 80),
-          
             ],
           ),
         ),

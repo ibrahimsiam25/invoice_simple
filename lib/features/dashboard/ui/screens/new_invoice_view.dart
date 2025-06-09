@@ -4,8 +4,9 @@ import 'package:invoice_simple/features/dashboard/ui/widgets/custom_new_inovice_
 import 'package:invoice_simple/features/dashboard/ui/widgets/new_invoice_view_body.dart';
 
 class NewInvoiceView extends StatelessWidget {
-   NewInvoiceView({super.key});
+   NewInvoiceView({super.key, this.isEstimate = false});
   static const String routeName = '/new-invoice';
+  final bool isEstimate;
   final GlobalKey<NewInvoiceViewBodyState> bodyKey = GlobalKey<NewInvoiceViewBodyState>();
   @override
   Widget build(BuildContext context) {
@@ -19,7 +20,7 @@ class NewInvoiceView extends StatelessWidget {
           bodyKey.currentState?.onDone();
         },
       ),
-      body: NewInvoiceViewBody(key: bodyKey),
+      body: NewInvoiceViewBody(key: bodyKey, isEstimate: isEstimate),
     );
   }
 }

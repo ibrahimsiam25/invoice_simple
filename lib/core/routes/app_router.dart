@@ -19,7 +19,7 @@ import 'package:invoice_simple/features/settings/ui/screens/signature_view.dart'
 abstract class AppRouter {
   static GoRouter getRouter(bool isNotFirstLogin) {
     return GoRouter(
-      initialLocation: NewInvoiceView.routeName,
+      initialLocation:  InvoiceDashboardView.routeName,
       //  isNotFirstLogin
       //     ? InvoiceDashboardView.routeName
       //     : OnBoardingView.routeName,
@@ -42,7 +42,9 @@ abstract class AppRouter {
                   BlocProvider(create: (context) => ClientCubit()),
                   BlocProvider(create: (context) => ItemsCubit()),
                 ],
-                child: NewInvoiceView(),
+                child: NewInvoiceView(
+                  isEstimate: state.extra as bool? ?? false,
+                ),
               ),
         ),
         GoRoute(

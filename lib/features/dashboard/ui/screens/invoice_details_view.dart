@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:invoice_simple/core/functions/generate_invoice_pdf.dart';
 import 'package:invoice_simple/core/functions/update_invoice_by_number.dart';
 import 'package:invoice_simple/core/helpers/app_assets.dart';
 import 'package:invoice_simple/core/helpers/app_constants.dart';
@@ -117,6 +120,7 @@ class _InvoiceDetailsViewState extends State<InvoiceDetailsView> {
       padding: EdgeInsets.symmetric(horizontal: AppConstants.paddingHorizontal),
       child: Column(
         children: [
+        
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -180,29 +184,39 @@ class _InvoiceDetailsViewState extends State<InvoiceDetailsView> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                children: [
-                  SvgPicture.asset(Assets.imagesSvgShare),
-
-                  Text(
-                    'Share',
-                    style: AppTextStyles.poFont20BlackWh400.copyWith(
-                      fontSize: 14.sp,
+              GestureDetector(
+                onTap: () {
+               shareInvoice(invoice, context);
+                }, 
+                child: Column(
+                  children: [
+                    SvgPicture.asset(Assets.imagesSvgShare),
+                
+                    Text(
+                      'Share',
+                      style: AppTextStyles.poFont20BlackWh400.copyWith(
+                        fontSize: 14.sp,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-              Column(
-                children: [
-                  SvgPicture.asset(Assets.imagesSvgPrint),
-
-                  Text(
-                    'Print',
-                    style: AppTextStyles.poFont20BlackWh400.copyWith(
-                      fontSize: 14.sp,
+              GestureDetector(
+                onTap: () {
+                  printInvoice(invoice, context);
+                },
+                child: Column(
+                  children: [
+                    SvgPicture.asset(Assets.imagesSvgPrint),
+                
+                    Text(
+                      'Print',
+                      style: AppTextStyles.poFont20BlackWh400.copyWith(
+                        fontSize: 14.sp,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               Column(
                 children: [

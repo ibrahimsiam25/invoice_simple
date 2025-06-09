@@ -8,11 +8,7 @@ import 'package:invoice_simple/features/dashboard/ui/screens/inoice_preview_view
 import 'package:invoice_simple/features/dashboard/ui/screens/invoice_dashboard_view.dart';
 import 'package:invoice_simple/features/dashboard/ui/screens/invoice_details_view.dart';
 import 'package:invoice_simple/features/dashboard/ui/screens/new_invoice_view.dart';
-import 'package:invoice_simple/features/dashboard/ui/widgets/new_invoice_view_body.dart';
 import 'package:invoice_simple/features/onboarding/ui/screens/onboarding_view.dart';
-import 'package:invoice_simple/features/settings/data/model/business_user_model.dart';
-import 'package:invoice_simple/features/settings/data/model/client_model.dart';
-import 'package:invoice_simple/features/settings/data/model/item_model.dart';
 import 'package:invoice_simple/features/settings/ui/screens/add_clients_view.dart';
 import 'package:invoice_simple/features/settings/ui/screens/add_item_view.dart';
 import 'package:invoice_simple/features/settings/ui/screens/add_new_business_view.dart';

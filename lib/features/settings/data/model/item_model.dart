@@ -30,7 +30,8 @@ class ItemModel extends HiveObject {
 
   @HiveField(8)
   bool taxable;
-
+ @HiveField(9)
+  double? taxableAmount;
   ItemModel({
     this.name,
     this.details,
@@ -41,5 +42,6 @@ class ItemModel extends HiveObject {
     this.discount,
     this.discountActive = false,
     this.taxable = false,
+    this.taxableAmount,
   });
 }

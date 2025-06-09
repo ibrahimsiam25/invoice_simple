@@ -26,13 +26,14 @@ class ItemModelAdapter extends TypeAdapter<ItemModel> {
       discount: fields[6] as double?,
       discountActive: fields[7] as bool,
       taxable: fields[8] as bool,
+      taxableAmount: fields[9] as double?,
     );
   }
 
   @override
   void write(BinaryWriter writer, ItemModel obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(10)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -50,7 +51,9 @@ class ItemModelAdapter extends TypeAdapter<ItemModel> {
       ..writeByte(7)
       ..write(obj.discountActive)
       ..writeByte(8)
-      ..write(obj.taxable);
+      ..write(obj.taxable)
+      ..writeByte(9)
+      ..write(obj.taxableAmount);
   }
 
   @override

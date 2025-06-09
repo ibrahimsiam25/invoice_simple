@@ -29,8 +29,9 @@ class _NewItemBottomSheetState extends State<NewItemBottomSheet> {
   final TextEditingController quantityController = TextEditingController(text: "1");
   final TextEditingController unitTypeController = TextEditingController(text: "Optional");
   final TextEditingController discountController = TextEditingController();
+  final TextEditingController taxableController = TextEditingController();
 
-  @override
+  @override  
   void dispose() {
     nameController.dispose();
     detailsController.dispose();
@@ -38,6 +39,7 @@ class _NewItemBottomSheetState extends State<NewItemBottomSheet> {
     quantityController.dispose();
     unitTypeController.dispose();
     discountController.dispose();
+    taxableController.dispose();
     super.dispose();
   }
 
@@ -53,7 +55,13 @@ class _NewItemBottomSheetState extends State<NewItemBottomSheet> {
     int? quantity = int.tryParse(quantityController.text.trim());
     String? unitType = unitTypeController.text.trim().isEmpty ? null : unitTypeController.text.trim();
     double? discount = double.tryParse(discountController.text.trim());
-
+    double? taxableAmount = double.tryParse(taxableController.text.trim());
+if(taxableAmount != null){
+  taxable = true;
+}
+if(discount != null){
+  discountActive = true;
+}
     final item = ItemModel(
       name: billTo,
       details: details,
@@ -64,6 +72,7 @@ class _NewItemBottomSheetState extends State<NewItemBottomSheet> {
       discount: discount,
       discountActive: discountActive,
       taxable: taxable,
+      taxableAmount: taxableAmount,
     );
 
     final box = await Hive.openBox<ItemModel>(AppConstants.hiveItemBox);
@@ -379,7 +388,7 @@ class _NewItemBottomSheetState extends State<NewItemBottomSheet> {
                       decoration: InputDecoration(
                         isDense: true,
                         border: InputBorder.none,
-                        hintText: "0",
+                        hintText: "0%",
                         hintStyle: AppTextStyles.poFont20BlackWh400.copyWith(
                           fontSize: 12.sp,
                         ),
@@ -403,35 +412,55 @@ class _NewItemBottomSheetState extends State<NewItemBottomSheet> {
             ),
             SizedBox(height: 32.h),
             // Taxable row
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
+             Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Text(
                   "Taxable?",
                   style: AppTextStyles.poFont20BlackWh400.copyWith(
                     fontSize: 12.sp,
                     color: AppColors.blueGrey,
                   ),
                 ),
-                CustomSwitchButton(
-                  value: taxable,
-                  onChanged: (val) {
-                    setState(() {
-                      taxable = val;
-                    });
-                  },
-                ),
-              ],
+              ),
             ),
-            SizedBox(height: 100.h),
-            FilledTextButton(
-              color: AppColors.blue,
-              text: 'Add Item',
-              onPressed: () {
-           
-                 _saveItem();
-               
-              },
+            Container(
+              decoration: BoxDecoration(
+                color: AppColors.white,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: TextField(
+                      controller: taxableController,
+                      decoration: InputDecoration(
+                        isDense: true,
+                        border: InputBorder.none,
+                        hintText: "0%",
+                        hintStyle: AppTextStyles.poFont20BlackWh400.copyWith(
+                          fontSize: 12.sp,
+                        ),
+                      ),
+                      style: AppTextStyles.poFont20BlackWh400.copyWith(
+                        fontSize: 13,
+                      ),
+                      keyboardType: TextInputType.number,
+                    ),
+                  ),
+                  CustomSwitchButton(
+                    value: taxable,
+                    onChanged: (val) {
+                      setState(() {
+                        taxable = val;
+                      });
+                    },
+                  ),
+                ],
+              ),
             ),
             SizedBox(height: 38.h),
           ],

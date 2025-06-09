@@ -1,8 +1,13 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:invoice_simple/features/dashboard/data/models/invoice_model.dart';
+import 'package:invoice_simple/features/dashboard/ui/cubit/business_cubit.dart';
+import 'package:invoice_simple/features/dashboard/ui/cubit/client_cubit.dart';
 import 'package:invoice_simple/features/dashboard/ui/screens/inoice_preview_view.dart';
 import 'package:invoice_simple/features/dashboard/ui/screens/invoice_dashboard_view.dart';
 import 'package:invoice_simple/features/dashboard/ui/screens/invoice_details_view.dart';
 import 'package:invoice_simple/features/dashboard/ui/screens/new_invoice_view.dart';
+import 'package:invoice_simple/features/dashboard/ui/widgets/new_invoice_view_body.dart';
 import 'package:invoice_simple/features/onboarding/ui/screens/onboarding_view.dart';
 import 'package:invoice_simple/features/settings/data/model/business_user_model.dart';
 import 'package:invoice_simple/features/settings/data/model/client_model.dart';
@@ -17,7 +22,7 @@ import 'package:invoice_simple/features/settings/ui/screens/signature_view.dart'
 abstract class AppRouter {
   static GoRouter getRouter(bool isNotFirstLogin) {
     return GoRouter(
-      initialLocation:NewInvoiceView.routeName,
+      initialLocation: NewInvoiceView.routeName,
       //  isNotFirstLogin
       //     ? InvoiceDashboardView.routeName
       //     : OnBoardingView.routeName,
@@ -33,11 +38,20 @@ abstract class AppRouter {
         ),
         GoRoute(
           path: NewInvoiceView.routeName,
-          builder: (context, state) => const NewInvoiceView(),
+          builder:
+              (context, state) => MultiBlocProvider(
+                providers: [
+                  BlocProvider(create: (context) => BusinessCubit()),
+                  BlocProvider(create: (context) => ClientCubit()),
+                ],
+                child: NewInvoiceView(),
+              ),
         ),
         GoRoute(
           path: InvoicePreviewView.routeName,
-          builder: (context, state) => const InvoicePreviewView(),
+          builder:
+              (context, state) =>
+                  InvoicePreviewView(invoice: state.extra as InvoiceModel),
         ),
         GoRoute(
           path: InvoiceDetailsView.routeName,
@@ -50,9 +64,9 @@ abstract class AppRouter {
         ),
         GoRoute(
           path: BusinessView.routeName,
-          builder: (context, state) =>  BusinessView(
-  onSaved: (state.extra as Function(BusinessUserModel business)?),
-          ), 
+          builder:
+              (context, state) =>
+                  BusinessView(clickable: state.extra as bool? ?? false),
         ),
         GoRoute(
           path: AddNewBusinessView.routeName,
@@ -67,15 +81,16 @@ abstract class AppRouter {
         ),
         GoRoute(
           path: AddItemView.routeName,
-          builder: (context, state) =>  AddItemView(
-            onSaved: (state.extra as Function(List<ItemModel> item)?),
-          ),
+          builder:
+              (context, state) => AddItemView(
+                onSaved: (state.extra as Function(List<ItemModel> item)?),
+              ),
         ),
         GoRoute(
           path: AddClientsView.routeName,
-          builder: (context, state) =>  AddClientsView(
-            onSaved: (state.extra as Function(ClientModel client)?),
-          ),
+          builder:
+              (context, state) =>
+                  AddClientsView(clickable: state.extra as bool? ?? false),
         ),
       ],
     );

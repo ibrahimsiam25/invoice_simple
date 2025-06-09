@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:invoice_simple/core/theme/app_colors.dart';
 import 'package:invoice_simple/core/theme/app_text_styles.dart';
 import 'package:invoice_simple/features/settings/data/model/business_user_model.dart';
@@ -9,20 +10,17 @@ import 'package:invoice_simple/features/settings/ui/widgets/more_menu.dart';
 class BusinessUser extends StatelessWidget {
   final BusinessUserModel user;
   const BusinessUser({
-    super.key,
-    required this.user, this.onSaved,
+    super.key, required this.user, required this.clickable,
+   
   });
-  final Function(BusinessUserModel business)? onSaved;
+  final bool clickable;
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        if (onSaved != null) {
-         
-          onSaved!(user);
-            Navigator.pop(context);
-        }
-      },
+      onTap: clickable ? () {
+      context.pop(user);
+      
+      } : null,
       child: Container(
         decoration: BoxDecoration(
           color: AppColors.white,

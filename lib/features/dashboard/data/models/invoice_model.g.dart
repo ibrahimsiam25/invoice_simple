@@ -24,7 +24,7 @@ class InvoiceModelAdapter extends TypeAdapter<InvoiceModel> {
       items: (fields[4] as List).cast<ItemModel>(),
       total: fields[5] as double,
       currency: fields[6] as String,
-      imagePaths: (fields[7] as List).cast<String>(),
+      imagePath: fields[7] as String,
     );
   }
 
@@ -47,7 +47,7 @@ class InvoiceModelAdapter extends TypeAdapter<InvoiceModel> {
       ..writeByte(6)
       ..write(obj.currency)
       ..writeByte(7)
-      ..write(obj.imagePaths);
+      ..write(obj.imagePath);
   }
 
   @override

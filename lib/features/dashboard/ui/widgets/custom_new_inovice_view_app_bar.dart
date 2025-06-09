@@ -7,9 +7,10 @@ import 'package:invoice_simple/features/dashboard/ui/screens/inoice_preview_view
 
 class CustomNewInoviceViewAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomNewInoviceViewAppBar({
-    super.key,
+    super.key, required this.onPreview, required this.onDone,
   });
-
+final VoidCallback onPreview;
+final VoidCallback onDone;
   @override
   Size get preferredSize => Size.fromHeight(60.h);
 
@@ -35,20 +36,19 @@ class CustomNewInoviceViewAppBar extends StatelessWidget implements PreferredSiz
               ),
               const Spacer(),
               TextButton(
-                onPressed: () {
-                  context.push(
-                    InvoicePreviewView.routeName
-                  );
-                },
+                onPressed: () =>
+                  onPreview(),
+                  
+                
                 child: Text(
                 "Preview",
                  style: AppTextStyles.poFont20BlackWh400.copyWith(
                       fontSize: 14.sp
                     ),
               ),),
-              const SizedBox(width: 12),
+              const SizedBox(width: 12), 
               TextButton(
-                onPressed: () {},
+                onPressed: () =>onDone(),
                 child: Text(
                   "Done",
                   style: AppTextStyles.poFont20BlackWh600.copyWith(

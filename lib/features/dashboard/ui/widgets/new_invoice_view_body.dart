@@ -1,7 +1,8 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:invoice_simple/core/helpers/app_assets.dart';
 import 'package:invoice_simple/core/helpers/app_constants.dart';
 import 'package:invoice_simple/core/helpers/shared_pref_helper.dart';
 import 'package:invoice_simple/core/theme/app_colors.dart';
@@ -9,9 +10,13 @@ import 'package:invoice_simple/core/theme/app_text_styles.dart';
 import 'package:invoice_simple/core/widgets/build_message_bar.dart';
 import 'package:invoice_simple/core/widgets/filled_text_button.dart';
 import 'package:invoice_simple/features/dashboard/data/models/invoice_model.dart';
+import 'package:invoice_simple/features/dashboard/ui/cubit/business_cubit.dart';
+import 'package:invoice_simple/features/dashboard/ui/cubit/client_cubit.dart';
+import 'package:invoice_simple/features/dashboard/ui/screens/inoice_preview_view.dart';
 import 'package:invoice_simple/features/dashboard/ui/widgets/add_row_button.dart';
 import 'package:invoice_simple/features/dashboard/ui/widgets/custom_select_item.dart';
 import 'package:invoice_simple/features/dashboard/ui/widgets/invoice_header_row.dart';
+import 'package:invoice_simple/features/dashboard/ui/widgets/new_invoice_add_photo.dart';
 import 'package:invoice_simple/features/dashboard/ui/widgets/section_label.dart';
 import 'package:invoice_simple/features/dashboard/ui/widgets/summary_row.dart';
 import 'package:invoice_simple/features/settings/data/model/business_user_model.dart';
@@ -20,24 +25,45 @@ import 'package:invoice_simple/features/settings/data/model/item_model.dart';
 import 'package:invoice_simple/features/settings/ui/screens/add_clients_view.dart';
 import 'package:invoice_simple/features/settings/ui/screens/add_item_view.dart';
 import 'package:invoice_simple/features/settings/ui/screens/business_view.dart';
-import 'package:svg_flutter/svg.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 
 class NewInvoiceViewBody extends StatefulWidget {
-  const NewInvoiceViewBody({super.key});
-
+  const NewInvoiceViewBody({super.key, });
+ 
   @override
-  State<NewInvoiceViewBody> createState() => _NewInvoiceViewBodyState();
+  State<NewInvoiceViewBody> createState() => NewInvoiceViewBodyState();
 }
-
-class _NewInvoiceViewBodyState extends State<NewInvoiceViewBody> {
+ 
+class NewInvoiceViewBodyState extends State<NewInvoiceViewBody> {
   String invoiceNumber = "001";
    double totalAmount = 0.0;
   BusinessUserModel? selectedBusiness;
   ClientModel? selectedClient;
   List<ItemModel> selectedItems = [];
+  File? logoImage; 
   String currency = "USA";
+  void onPreview() {
+      if (selectedBusiness == null ||
+      selectedClient == null ||
+      selectedItems.isEmpty) {
+    buildMessageBar(context, "Please fill all business Account , Client and Items.");
+    return;
+  }
+  context.push(InvoicePreviewView.routeName, extra: InvoiceModel(
+    issuedDate: DateTime.now(),
+    invoiceNumber: invoiceNumber,
+    businessAccount: selectedBusiness!,
+    client: selectedClient!,
+    items: selectedItems,
+    total: totalAmount,
+    currency: currency,
+    imagePath: logoImage?.path ?? '',
+  ));
+  }
+  void onDone() {
+    _saveInvoiceData();
+  }
 @override
 void initState() {
   super.initState();
@@ -65,11 +91,12 @@ void initState() {
       );
  
   }
+
   void _saveInvoiceData() async {
   if (selectedBusiness == null ||
       selectedClient == null ||
       selectedItems.isEmpty) {
-    buildMessageBar(context, "Please fill all required fields.");
+    buildMessageBar(context, "Please fill all business Account , Client and Items.");
     return;
   }
 
@@ -88,7 +115,7 @@ void initState() {
     items: selectedItems,
     total: total,
     currency: currency,
-    imagePaths: [], 
+    imagePath: logoImage?.path ?? '',
   );
 
   await box.add(newInvoice);
@@ -130,77 +157,110 @@ SharedPrefHelper.setData(
             SizedBox(height: 18),
             // Business Account
             SectionLabel(label: 'Business account'),
-            if (selectedBusiness == null)
-              AddRowButton(
-                text: "Choose Account",
-                onTap: () {
-                  context.push(
-                    BusinessView.routeName,
-                    extra: (BusinessUserModel business) {
-                      setState(() {
-                        currency = business.currency;
-                        selectedBusiness = business;
-                      });
-                    },
-                  );
-                },
-              )
-            else
-              CustomSelectItem(
-                text: selectedBusiness!.name,
-                onPressed: () {
-                  setState(() {
-                    currency = "USA";
-                    selectedBusiness = null;
-                  });
-                },
-              ),
+
+BlocBuilder<BusinessCubit, BusinessState>(
+  builder: (context, state) {
+
+    if (state.selectedBusiness == null) {
+
+      return AddRowButton(
+        text: "Choose Account",
+        onTap: () async {
+          final cubit = context.read<BusinessCubit>();
+          final business = await context.push<BusinessUserModel>(
+            BusinessView.routeName,
+            extra: true, 
+          );
+
+          if (business != null) {
+            cubit.selectBusiness(business);
+          }
+        },
+      );
+    } else {
+       
+      return CustomSelectItem(
+        text: state.selectedBusiness!.name,
+        onPressed: () {
+          context.read<BusinessCubit>().clearBusiness();
+        },
+      );
+    }
+  },
+)
+
+,
 
             SizedBox(height: 10),
             // Client
             SectionLabel(label: 'Client'),
-           if (selectedClient == null)
-              AddRowButton(
-                text: "Add Client",
-                onTap: () {
-                  context.push(
-                    AddClientsView.routeName,
-                    extra: (ClientModel client) {
-                      setState(() {
-                        
-                        selectedClient = client;
-                      });
-                    },
-                  );
-                },
-              )
-            else
-              CustomSelectItem(
-                text: selectedClient!.clientName,
-                onPressed: () {
-                  setState(() {
-                    selectedClient = null;
-                  });
-                },
-              ),
+          BlocBuilder<ClientCubit, ClientState>(
+  builder: (context, state) {
+    if (state.selectedClient == null) {
+      return AddRowButton(
+        text: "Add Client",
+        onTap: () async {
+          final cubit = context.read<ClientCubit>();
+          final client = await context.push<ClientModel>(
+            AddClientsView.routeName,
+            extra: true,
+          );
+
+          if (client != null) {
+            cubit.selectClient(client);
+          }
+        },
+      );
+    } else {
+      return CustomSelectItem(
+        text: state.selectedClient!.clientName,
+        onPressed: () {
+          context.read<ClientCubit>().clearClient();
+        },
+      );
+    }
+  },
+)
+,
             SizedBox(height: 10),
+
+
+
+
+
+
+
             // Items
             SectionLabel(label: 'Items'),
+
+
+
+
+
+            
             if (selectedItems.isEmpty)
               AddRowButton(
                 text: "Add Items",
-                onTap: () {
-                  context.push(
-                    AddItemView.routeName,
-                    extra: (List<ItemModel> item) {
-                      setState(() {
-                     
-                        selectedItems.addAll(item);
-                          updateTotalAmount();
-                      });
-                    },
-                  );
-                },
+            onTap: () {
+  context.push(
+    AddItemView.routeName,
+    extra: (List<ItemModel> item) {
+      setState(() {
+        selectedItems.addAll(item);
+        updateTotalAmount();
+      });
+    },
+  ).then((_) {
+    // هنا تأكد من إعادة تحميل البيانات أو تحديث الحالة
+    setState(() {
+      // أو إذا تحتاج عمل fetch من Hive أو أي مصدر بيانات آخر
+      // مثلا:
+      // selectedItems = fetchItemsFromHive();
+      updateTotalAmount();
+    });
+  });
+},
+
               )
             else
               Column(
@@ -238,37 +298,34 @@ SharedPrefHelper.setData(
               )
                 ],
               ),
+
+
+
+
+
+
+
+
             SizedBox(height: 14),
             // Summary
             SectionLabel(label: 'Summary'),
-            SummaryRow(currency: currency, totalAmount: totalAmount),
+
+BlocBuilder<BusinessCubit, BusinessState>(
+  builder: (context, state) {
+    return SummaryRow(currency: state.currency, totalAmount: totalAmount);
+  },
+)
+,
             SizedBox(height: 14),
             // Photos
             SectionLabel(label: 'Photos'),
-            AddRowButton(
-              text: "Add Photo",
-              trailing: Container(
-                decoration: BoxDecoration(
-                  color: AppColors.blueGrey,
-                  borderRadius: BorderRadius.circular(10.r),
-                ),
-                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                child: Row(
-                  children: [
-                    SvgPicture.asset(Assets.imagesSvgStar),
-                    SizedBox(width: 4.w),
-                    Text(
-                      "premium",
-                      style: AppTextStyles.poFont20BlackWh400.copyWith(
-                        fontSize: 8.sp,
-
-                        color: AppColors.white,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              onTap: () {},
+          NewInvoiceAddPhoto(
+             onImageSelected: (image) {
+            
+                setState(() {
+                  logoImage = image;
+                });
+              },
             ),
             SizedBox(height: 100.h),
             FilledTextButton(
@@ -285,3 +342,9 @@ SharedPrefHelper.setData(
     );
   }
 }
+
+
+
+
+
+

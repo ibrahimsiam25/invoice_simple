@@ -4,14 +4,23 @@ import 'package:invoice_simple/features/dashboard/ui/widgets/custom_new_inovice_
 import 'package:invoice_simple/features/dashboard/ui/widgets/new_invoice_view_body.dart';
 
 class NewInvoiceView extends StatelessWidget {
-  const NewInvoiceView({super.key});
+   NewInvoiceView({super.key});
   static const String routeName = '/new-invoice';
+  final GlobalKey<NewInvoiceViewBodyState> bodyKey = GlobalKey<NewInvoiceViewBodyState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: CustomNewInoviceViewAppBar(),
-      body: NewInvoiceViewBody(),
+      appBar: CustomNewInoviceViewAppBar(
+        onPreview: () {
+         bodyKey.currentState?.onPreview();
+        },
+        onDone: () {
+          bodyKey.currentState?.onDone();
+        },
+      ),
+      body: NewInvoiceViewBody(key: bodyKey),
     );
   }
 }
+  

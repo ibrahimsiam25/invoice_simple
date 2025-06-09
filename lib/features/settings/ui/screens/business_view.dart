@@ -13,10 +13,10 @@ import 'package:invoice_simple/features/settings/ui/screens/add_new_business_vie
 import 'package:invoice_simple/features/settings/ui/widgets/business_view_body.dart';
 
 class BusinessView extends StatelessWidget {
-  const BusinessView({super.key, required this.onSaved});
-   final Function(BusinessUserModel business)? onSaved;
+  const BusinessView({super.key, this.clickable=false});
+   final bool clickable ;
   static const String routeName = "/business";
-
+    
   @override
   Widget build(BuildContext context) {
     final box = Hive.box<BusinessUserModel>(AppConstants.hiveBusinessBox);
@@ -40,10 +40,10 @@ class BusinessView extends StatelessWidget {
         builder: (context, Box<BusinessUserModel> box, _) {
           final users = box.values.toList();
           return BusinessViewBody(
-            onSaved: onSaved, 
+         clickable: clickable,
             users: users);
         },
       ),
     );
   }
-}
+}  

@@ -31,7 +31,7 @@ class InvoiceModel extends HiveObject {
   String currency;
 
   @HiveField(7)
-  List<String> imagePaths;
+  String imagePath;
 
   InvoiceModel({
     required this.issuedDate,
@@ -42,9 +42,9 @@ class InvoiceModel extends HiveObject {
     required this.items,
     required this.total,
     required this.currency,
-    required this.imagePaths,
+    required this.imagePath,
   });
 }
-
+     
 
 

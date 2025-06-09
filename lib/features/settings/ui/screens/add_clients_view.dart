@@ -6,8 +6,8 @@ import 'package:invoice_simple/features/settings/ui/widgets/add_clients_view_bod
 import 'package:invoice_simple/features/settings/ui/widgets/new_client_bottom_sheet.dart';
 
 class AddClientsView extends StatefulWidget {
-  const AddClientsView({super.key, this.onSaved});
-  final Function(ClientModel client)? onSaved;
+  const AddClientsView({super.key, this.clickable = false, });
+  final bool clickable;
   static const String routeName = '/add-clients';
 
   @override
@@ -46,7 +46,7 @@ class _AddClientsViewState extends State<AddClientsView> {
         },
       ),
       body: AddClientsViewBody(
-        onSaved: widget.onSaved,
+           clickable: widget.clickable,
         myController: myController),
     );
   }

@@ -461,7 +461,14 @@ if(discount != null){
                   ),
                 ],
               ),
-            ),
+            ), SizedBox(height: 20.h),
+               FilledTextButton(
+                  color: AppColors.blue,
+                  text: "Continue",
+                  onPressed: () {
+                  _saveItem();
+                  },
+                ),
             SizedBox(height: 38.h),
           ],
         ),

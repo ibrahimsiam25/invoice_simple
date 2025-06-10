@@ -25,9 +25,10 @@ class LabeledTextField extends StatelessWidget {
       child: Row(
         children: [
           SizedBox(
-            width: 70,
+            width: 70.w,
             child: Text(
               label,
+              maxLines: 1,
               style: AppTextStyles.moFont20BlackWh400.copyWith(
                 color:AppColors.black,
                 fontSize: 16.sp,

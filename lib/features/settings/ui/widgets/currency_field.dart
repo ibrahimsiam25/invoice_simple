@@ -66,7 +66,7 @@ class _CurrencyFieldState extends State<CurrencyField> {
           child: Row(
             children: [
               SizedBox(
-                width: 70,
+                width: 70.w,
                 child: Text(
                   widget.label,
                   style: AppTextStyles.moFont20BlackWh400.copyWith(

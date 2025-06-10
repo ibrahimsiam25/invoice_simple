@@ -96,7 +96,7 @@ class InvoiceDashboardViewBody extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    '\$$totalIncome',
+                                    '\$${totalIncome.toStringAsFixed(2)}',
 
                                     overflow: TextOverflow.ellipsis,
                                     style: AppTextStyles.moFont20BlackWh500.copyWith(

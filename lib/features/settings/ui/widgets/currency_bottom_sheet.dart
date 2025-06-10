@@ -25,6 +25,7 @@ class CurrencyBottomSheet extends StatelessWidget {
     );
 
     return Container(
+     
       height: MediaQuery.of(context).size.height * 0.85, 
       decoration: BoxDecoration(
         color: AppColors.background,
@@ -138,7 +139,7 @@ class CurrencyBottomSheet extends StatelessWidget {
                       child: Row(
                         children: [
                           SizedBox(
-                            width: 50,
+                            width: 50.w,
                             child: Text(
                               currency.code,
                               style: AppTextStyles.poFont20BlackWh400.copyWith(

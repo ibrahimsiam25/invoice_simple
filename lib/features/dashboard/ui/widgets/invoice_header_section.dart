@@ -13,7 +13,7 @@ class InvoiceHeaderSection extends StatefulWidget {
   final bool isPaid;
   final PaymentMethod? paymentMethod;
   final InvoiceModel invoice;
- 
+
   const InvoiceHeaderSection({
     super.key,
     required this.isPaid,
@@ -26,64 +26,70 @@ class InvoiceHeaderSection extends StatefulWidget {
 }
 
 class _InvoiceHeaderSectionState extends State<InvoiceHeaderSection> {
-    double? receivedPayment;
+  double? receivedPayment;
 
   @override
   void initState() {
     super.initState();
     receivedPayment = widget.invoice.receivedPayment;
   }
+
   void showPaymentDialog(BuildContext context, double? currentValue) {
-    final controller = TextEditingController(text: currentValue?.toString() ?? '');
+    final controller = TextEditingController(
+      text: currentValue?.toString() ?? '',
+    );
 
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: AppColors.background,
-        title: const Text('Enter Received Payment'),
-        content: TextField(
-          controller: controller,
-          keyboardType: TextInputType.number,
-          decoration: const InputDecoration(hintText: "Payment Amount"),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child:  Text('Cancel',
-            style: AppTextStyles.poFont20BlackWh400.copyWith(
-              color: AppColors.primary,
-              fontSize: 14, 
-            )
-            ,
+      builder:
+          (context) => AlertDialog(
+            backgroundColor: AppColors.background,
+            title: const Text('Enter Received Payment'),
+            content: TextField(
+              controller: controller,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(hintText: "Payment Amount"),
             ),
-          ),
-          TextButton(
-            onPressed: () {
-              final value = double.tryParse(controller.text);
-              updateInvoiceByNumber(
-                invoiceNumber: widget.invoice.invoiceNumber,
-                updatedInvoice: widget.invoice.copyWith(
-                  receivedPayment: value ?? 0.0,
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(
+                  'Cancel',
+                  style: AppTextStyles.poFont20BlackWh400.copyWith(
+                    color: AppColors.primary,
+                    fontSize: 14,
+                  ),
                 ),
-              );
-              if (value != null) {
-                setState(() {
-                  receivedPayment = value;
-                });
-                Navigator.pop(context);
-              }
-            },
-            child: Text('Save',
-           style:   AppTextStyles.poFont20BlackWh400.copyWith(
-              color: AppColors.primary,
-              fontSize: 14, 
-            )
-            ),
+              ),
+              TextButton(
+                onPressed: () {
+                  final value = double.tryParse(controller.text);
+                  updateInvoiceByNumber(
+                    invoiceNumber: widget.invoice.invoiceNumber,
+                    updatedInvoice: widget.invoice.copyWith(
+                      receivedPayment: value ?? 0.0,
+                    ),
+                  );
+                  if (value != null) {
+                    setState(() {
+                      receivedPayment = value;
+                    });
+                    Navigator.pop(context);
+                  }
+                },
+                child: Text(
+                  'Save',
+                  style: AppTextStyles.poFont20BlackWh400.copyWith(
+                    color: AppColors.primary,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     // اسم وسيلة الدفع للعرض
@@ -107,7 +113,7 @@ class _InvoiceHeaderSectionState extends State<InvoiceHeaderSection> {
       child: Center(
         child: SizedBox(
           width: double.infinity,
-          height: 250,
+          height: 270,
           child: Stack(
             clipBehavior: Clip.none,
             alignment: Alignment.topCenter,
@@ -143,7 +149,7 @@ class _InvoiceHeaderSectionState extends State<InvoiceHeaderSection> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                    widget.invoice.businessAccount.name,
+                                      widget.invoice.businessAccount.name,
                                       style: AppTextStyles.poFont20BlackWh600
                                           .copyWith(fontSize: 10.sp),
                                     ),
@@ -232,7 +238,7 @@ class _InvoiceHeaderSectionState extends State<InvoiceHeaderSection> {
                 left: 0,
                 right: 0,
                 child: Container(
-                  height: 160,
+                  height: 180,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 24,
                     vertical: 13,
@@ -340,61 +346,78 @@ class _InvoiceHeaderSectionState extends State<InvoiceHeaderSection> {
                                 textAlign: TextAlign.center,
                               ),
                               const SizedBox(height: 14),
-                           receivedPayment != null && receivedPayment != 0
-  ? InkWell(
-      onTap: () => showPaymentDialog(context, receivedPayment, ),
-      child: Row(
-  mainAxisAlignment: MainAxisAlignment.center,
-  children: [
-    Text(
-      'Received Payment: ',
-      style: AppTextStyles.poFont20BlackWh400.copyWith(
-        fontSize: 14.sp,
-        color: AppColors.blueGrey,
-        fontWeight: FontWeight.bold,
-      ),
-    ),
-    Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
-      decoration: BoxDecoration(
-        color: AppColors.primary,
-        borderRadius: BorderRadius.circular(7),
-      ),
-      child: Text(
-        '${receivedPayment!.toStringAsFixed(2)} \$',
-        style: AppTextStyles.poFont20BlackWh400.copyWith(
-          color: AppColors.white,
-          fontWeight: FontWeight.bold,
-          fontSize: 14.sp,
-        ),
-      ),
-    ),
-  ],
-)
-,
-    )
-  : OutlinedButton(
-      style: OutlinedButton.styleFrom(
-        side: BorderSide(
-          color: AppColors.extraLightGreyDivder,
-          width: 1.5,
-        ),
-        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-        foregroundColor: AppColors.black,
-      ),
-      onPressed: () => showPaymentDialog(context, null, ),
-      child: Text(
-        '+ Add Received Payment',
-        style: AppTextStyles.poFont20BlackWh400.copyWith(
-          fontSize: 14.sp,
-          color: AppColors.black,
-        ),
-      ),
-    )  
-,
+                              receivedPayment != null && receivedPayment != 0
+                                  ? InkWell(
+                                    onTap:
+                                        () => showPaymentDialog(
+                                          context,
+                                          receivedPayment,
+                                        ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          'Received Payment: ',
+                                          style: AppTextStyles
+                                              .poFont20BlackWh400
+                                              .copyWith(
+                                                fontSize: 14.sp,
+                                                color: AppColors.blueGrey,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                        ),
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 14,
+                                            vertical: 4,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: AppColors.primary,
+                                            borderRadius: BorderRadius.circular(
+                                              7,
+                                            ),
+                                          ),
+                                          child: Text(
+                                            '${receivedPayment!.toStringAsFixed(2)} \$',
+                                            style: AppTextStyles
+                                                .poFont20BlackWh400
+                                                .copyWith(
+                                                  color: AppColors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 14.sp,
+                                                ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                  : OutlinedButton(
+                                    style: OutlinedButton.styleFrom(
+                                      side: BorderSide(
+                                        color: AppColors.extraLightGreyDivder,
+                                        width: 1.5,
+                                      ),
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 5,
+                                        horizontal: 15,
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      foregroundColor: AppColors.black,
+                                    ),
+                                    onPressed:
+                                        () => showPaymentDialog(context, null),
+                                    child: Text(
+                                      '+ Add Received Payment',
+                                      style: AppTextStyles.poFont20BlackWh400
+                                          .copyWith(
+                                            fontSize: 14.sp,
+                                            color: AppColors.black,
+                                          ),
+                                    ),
+                                  ),
                             ],
                           ),
                 ),
@@ -406,4 +429,3 @@ class _InvoiceHeaderSectionState extends State<InvoiceHeaderSection> {
     );
   }
 }
-

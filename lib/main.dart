@@ -15,28 +15,29 @@ import 'package:invoice_simple/features/settings/data/model/business_user_model.
 import 'package:invoice_simple/features/settings/data/model/client_model.dart';
 import 'package:invoice_simple/features/settings/data/model/item_model.dart';
 import 'package:invoice_simple/my_app.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  bool isNotFirstLogin = await SharedPrefHelper.getBool(AppConstants.prefsNotFirstLogin) ;
+  bool isNotFirstLogin = await SharedPrefHelper.getBool(
+    AppConstants.prefsNotFirstLogin,
+  );
   await ScreenUtil.ensureScreenSize();
   await setupGetIt();
-   await Hive.initFlutter();
+  await Hive.initFlutter();
 
   Hive.registerAdapter(BusinessUserModelAdapter());
   await Hive.openBox<BusinessUserModel>(AppConstants.hiveBusinessBox);
 
- Hive.registerAdapter(ItemModelAdapter());
- await Hive.openBox<ItemModel>(AppConstants.hiveItemBox);
+  Hive.registerAdapter(ItemModelAdapter());
+  await Hive.openBox<ItemModel>(AppConstants.hiveItemBox);
 
- Hive.registerAdapter(ClientModelAdapter());
- await Hive.openBox<ClientModel>(AppConstants.hiveClientBox);
+  Hive.registerAdapter(ClientModelAdapter());
+  await Hive.openBox<ClientModel>(AppConstants.hiveClientBox);
 
   Hive.registerAdapter(InvoiceModelAdapter());
   await Hive.openBox<InvoiceModel>(AppConstants.hiveInvoiceBox);
 
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-  ]);
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
@@ -47,19 +48,16 @@ void main() async {
   );
 
   Bloc.observer = CustomBlocObserver();
-  runApp( 
-    
-     DevicePreview(
-        enabled: !kReleaseMode,
-        builder:
+  runApp(
+    //  DevicePreview(
+    //     enabled: !kReleaseMode,
+    //     builder:
 
-          (context) =>  MyApp(
-          isNotFirstLogin: false
-          )
+    //       (context) =>  MyApp(
+    //       isNotFirstLogin: false
+    //       )
 
-       )
-  //   MyApp(
-  //   isNotFirstLogin: isNotFirstLogin
-  // )
+    //    )
+    MyApp(isNotFirstLogin: isNotFirstLogin),
   );
 }

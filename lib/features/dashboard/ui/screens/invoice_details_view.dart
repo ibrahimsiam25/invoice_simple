@@ -1,4 +1,4 @@
-import 'dart:io';
+
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -30,16 +30,17 @@ class InvoiceDetailsView extends StatefulWidget {
 
 class _InvoiceDetailsViewState extends State<InvoiceDetailsView> {
   bool isPaid = true;
- PaymentMethod?  selectedMethod;
-@override
+  PaymentMethod? selectedMethod;
+  @override
   void initState() {
-    if (widget.invoice.paymentMethod != null && widget.invoice.paymentMethod!.isNotEmpty) {
+    if (widget.invoice.paymentMethod != null &&
+        widget.invoice.paymentMethod!.isNotEmpty) {
       print("Payment Method: ${widget.invoice.paymentMethod}");
       selectedMethod = paymentMethodFromString(widget.invoice.paymentMethod!);
       print("Selected Method*/********: $selectedMethod");
     }
     super.initState();
-  }  
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,60 +51,65 @@ class _InvoiceDetailsViewState extends State<InvoiceDetailsView> {
           context.push(InvoicePreviewView.routeName, extra: widget.invoice);
         },
       ),
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            padding: EdgeInsets.only(bottom: 176.h),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header Section
-                InvoiceHeaderSection(
-                  invoice: widget.invoice,
-                  isPaid: isPaid,
-                
-              
-                  paymentMethod:  selectedMethod
-                ),
-                const SizedBox(height: 20),
-                // Invoice Status Section
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: AppConstants.paddingHorizontal,
-                  ),
-                  child: InvoiceStatusSection(
-                   initialPaidDate: widget.invoice.issuedDate,
-                    initialPaymentMethod: selectedMethod,
-                    onPaymentMethodSelected: (method) async {
-                      setState(() {
-                        isPaid = true;
-                        selectedMethod = method;
-                      });
-
-                      await updateInvoiceByNumber(
-                        invoiceNumber: widget.invoice.invoiceNumber,
-                        updatedInvoice: widget.invoice.copyWith(
-                          paymentMethod: paymentMethodText(),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return Stack(
+            children: [
+              // Scrollable content
+              Positioned.fill(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.only(bottom: 176.h),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      InvoiceHeaderSection(
+                        invoice: widget.invoice,
+                        isPaid: isPaid,
+                        paymentMethod: selectedMethod,
+                      ),
+                      const SizedBox(height: 20),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: AppConstants.paddingHorizontal,
                         ),
-                      );
-                    },
+                        child: InvoiceStatusSection(
+                          initialPaidDate: widget.invoice.issuedDate,
+                          initialPaymentMethod: selectedMethod,
+                          onPaymentMethodSelected: (method) async {
+                            setState(() {
+                              isPaid = true;
+                              selectedMethod = method;
+                            });
+
+                            await updateInvoiceByNumber(
+                              invoiceNumber: widget.invoice.invoiceNumber,
+                              updatedInvoice: widget.invoice.copyWith(
+                                paymentMethod: paymentMethodText(),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      _buildInvoiceDetailsSection(widget.invoice),
+                      const SizedBox(
+                        height: 100,
+                      ), // To add extra scroll space if needed
+                    ],
                   ),
                 ),
-                const SizedBox(height: 20),
-                // Invoice Details Section
-                _buildInvoiceDetailsSection(widget.invoice),
-                const SizedBox(height: 20),
-              ],
-            ),
-          ),
-          // Action Buttons Section
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: _buildActionButtonsSection(context, widget.invoice),
-          ),
-        ],
+              ),
+
+              // Fixed bottom action buttons
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: _buildActionButtonsSection(context, widget.invoice),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -230,7 +236,7 @@ Widget _buildActionButtonsSection(BuildContext context, InvoiceModel invoice) {
               child: Column(
                 children: [
                   SvgPicture.asset(Assets.imagesSvgEdit),
-              
+
                   Text(
                     'Edit',
                     style: AppTextStyles.poFont20BlackWh400.copyWith(

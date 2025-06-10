@@ -28,23 +28,25 @@ class InvoiceDashboardView extends StatelessWidget {
           padding: EdgeInsets.only(
             left: AppConstants.paddingHorizontal,
             right: AppConstants.paddingHorizontal,
-            bottom: 24,
+            bottom: 5,
             top: 2,
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              FilledTextButton(
-                onPressed: () => context.push(NewInvoiceView.routeName),
-                text: "Create Invoice",
-              ),
-              SizedBox(height: 8),
-              OutlinedTextButton( 
-                onPressed: ()  => context.push(NewInvoiceView.routeName,extra: true),
-
-                text: "Create Estimates",
-              ),
-            ],
+          child: SafeArea(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                FilledTextButton(
+                  onPressed: () => context.push(NewInvoiceView.routeName),
+                  text: "Create Invoice",
+                ),
+                SizedBox(height: 8),
+                OutlinedTextButton( 
+                  onPressed: ()  => context.push(NewInvoiceView.routeName,extra: true),
+            
+                  text: "Create Estimates",
+                ),
+              ],
+            ),
           ),
         ),
       ),

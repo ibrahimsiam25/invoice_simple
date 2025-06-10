@@ -49,15 +49,15 @@ void main() async {
 
   Bloc.observer = CustomBlocObserver();
   runApp(
-    //  DevicePreview(
-    //     enabled: !kReleaseMode,
-    //     builder:
+     DevicePreview(
+        enabled: !kReleaseMode,
+        builder:
 
-    //       (context) =>  MyApp(
-    //       isNotFirstLogin: false
-    //       )
+          (context) =>  MyApp(
+          isNotFirstLogin: false
+          )
 
-    //    )
-    MyApp(isNotFirstLogin: isNotFirstLogin),
+       )
+    // MyApp(isNotFirstLogin: isNotFirstLogin),
   );
 }

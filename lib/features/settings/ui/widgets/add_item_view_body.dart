@@ -182,18 +182,20 @@ class _AddItemViewBodyState extends State<AddItemViewBody> {
           
           // Add Items Button (only in clickable mode)
           if (widget.clickable)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 16),
-              child: SizedBox(
-                height: 40,
-                width: double.infinity,
-                child: FilledTextButton(
-                  text: "Add items to invoice",
-                  onPressed: () {
-                    if (selectedItems.isNotEmpty) {
-                      context.pop(selectedItems);
-                    }
-                  },
+            SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: SizedBox(
+                  height: 50,
+                  width: double.infinity,
+                  child: FilledTextButton(
+                    text: "Add items to invoice",
+                    onPressed: () {
+                      if (selectedItems.isNotEmpty) {
+                        context.pop(selectedItems);
+                      }
+                    },
+                  ),
                 ),
               ),
             ),

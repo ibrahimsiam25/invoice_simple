@@ -25,7 +25,7 @@ class LabeledTextField extends StatelessWidget {
       child: Row(
         children: [
           SizedBox(
-            width: 70.w,
+            width: 75.w,
             child: Text(
               label,
               maxLines: 1,

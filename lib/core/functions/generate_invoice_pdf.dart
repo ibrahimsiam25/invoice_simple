@@ -1,9 +1,7 @@
-
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:invoice_simple/core/helpers/app_constants.dart';
+import 'package:invoice_simple/core/functions/get_invoice_total.dart';
 import 'package:invoice_simple/features/dashboard/data/models/invoice_model.dart';
 import 'dart:io';
 import 'package:pdf/pdf.dart';
@@ -96,37 +94,11 @@ Future<Uint8List> generateInvoicePdfBytes(InvoiceModel invoice) async {
       signatureBytes = await file.readAsBytes();
     }
   }
-
-double subtotal = 0;
-double totalDiscount = 0;
-double totalTax = 0;
-
-for (final item in invoice.items) {
-  final qty = item.quantity ?? 0;
-  final price = item.unitPrice ?? 0;
-
-  // السعر الإجمالي قبل أي خصم
-  final amountBeforeDiscount = price * qty;
-
-  // نسبة الخصم (مثلاً 10 يعني 10%)
-  final discountPercent = (item.discountActive) ? (item.discount ?? 0) : 0;
-  final discountAmount = amountBeforeDiscount * (discountPercent / 100);
-
-  // القيمة بعد الخصم
-  final amountAfterDiscount = amountBeforeDiscount - discountAmount;
-
-  // نسبة الضريبة (مثلاً 15 يعني 15%)
-  final taxPercent = (item.taxable) ? (item.taxableAmount ?? 0) : 0;
-  final itemTax = amountAfterDiscount * (taxPercent / 100);
-
-  // التراكم
-  subtotal += amountBeforeDiscount;
-  totalDiscount += discountAmount;
-  totalTax += itemTax;
-}
-
-// الإجمالي النهائي
-final total = subtotal - totalDiscount + totalTax;
+final totals = calculateInvoiceTotals(invoice);
+double subtotal = totals.subtotal;
+double totalDiscount = totals.totalDiscount;
+double totalTax = totals.totalTax;
+final total = totals.total;
 
  
    pdf.addPage(

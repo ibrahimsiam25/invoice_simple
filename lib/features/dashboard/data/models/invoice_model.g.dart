@@ -26,13 +26,20 @@ class InvoiceModelAdapter extends TypeAdapter<InvoiceModel> {
       currency: fields[6] as String,
       imagePath: fields[7] as String,
       paymentMethod: fields[8] as String?,
+      isEstimated: fields[9] as bool?,
+      notes: fields[10] as String?,
+      invoiceDiscount: fields[11] as double?,
+      invoiceTax: fields[12] as double?,
+      receivedPayment: fields[15] as double?,
+      invoiceSubtotal: fields[13] as double?,
+      invoiceTotal: fields[14] as double?,
     );
   }
 
   @override
   void write(BinaryWriter writer, InvoiceModel obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(16)
       ..writeByte(0)
       ..write(obj.issuedDate)
       ..writeByte(1)
@@ -50,7 +57,21 @@ class InvoiceModelAdapter extends TypeAdapter<InvoiceModel> {
       ..writeByte(7)
       ..write(obj.imagePath)
       ..writeByte(8)
-      ..write(obj.paymentMethod);
+      ..write(obj.paymentMethod)
+      ..writeByte(9)
+      ..write(obj.isEstimated)
+      ..writeByte(10)
+      ..write(obj.notes)
+      ..writeByte(11)
+      ..write(obj.invoiceDiscount)
+      ..writeByte(12)
+      ..write(obj.invoiceTax)
+      ..writeByte(13)
+      ..write(obj.invoiceSubtotal)
+      ..writeByte(14)
+      ..write(obj.invoiceTotal)
+      ..writeByte(15)
+      ..write(obj.receivedPayment);
   }
 
   @override

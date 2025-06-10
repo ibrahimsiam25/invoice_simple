@@ -13,6 +13,7 @@ import 'package:invoice_simple/core/theme/app_colors.dart';
 import 'package:invoice_simple/core/theme/app_text_styles.dart';
 import 'package:invoice_simple/core/widgets/filled_text_button.dart';
 import 'package:invoice_simple/features/dashboard/data/models/invoice_model.dart';
+import 'package:invoice_simple/features/dashboard/ui/screens/edit_invoice_view.dart';
 import 'package:invoice_simple/features/dashboard/ui/screens/inoice_preview_view.dart';
 import 'package:invoice_simple/features/dashboard/ui/widgets/invoice_details_view_app_bar.dart';
 import 'package:invoice_simple/features/dashboard/ui/widgets/invoice_header_section.dart';
@@ -61,7 +62,7 @@ class _InvoiceDetailsViewState extends State<InvoiceDetailsView> {
                   invoice: widget.invoice,
                   isPaid: isPaid,
                 
-                  onAddReceivedPayment: () {},
+              
                   paymentMethod:  selectedMethod
                 ),
                 const SizedBox(height: 20),
@@ -222,17 +223,22 @@ Widget _buildActionButtonsSection(BuildContext context, InvoiceModel invoice) {
                 ],
               ),
             ),
-            Column(
-              children: [
-                SvgPicture.asset(Assets.imagesSvgEdit),
-
-                Text(
-                  'Edit',
-                  style: AppTextStyles.poFont20BlackWh400.copyWith(
-                    fontSize: 14.sp,
+            GestureDetector(
+              onTap: () {
+                context.push(EditInvoiceView.routeName, extra: invoice);
+              },
+              child: Column(
+                children: [
+                  SvgPicture.asset(Assets.imagesSvgEdit),
+              
+                  Text(
+                    'Edit',
+                    style: AppTextStyles.poFont20BlackWh400.copyWith(
+                      fontSize: 14.sp,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),

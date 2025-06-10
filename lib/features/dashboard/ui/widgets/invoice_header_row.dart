@@ -7,12 +7,13 @@ class InvoiceHeaderRow extends StatelessWidget {
   final String issued;
   final String due;
   final String number;
-
+final void Function()?  onIssuedTap;
   const InvoiceHeaderRow({
     super.key,
     required this.issued,
     required this.due,
     required this.number,
+    this.onIssuedTap
   });
 
   @override
@@ -73,16 +74,19 @@ class InvoiceHeaderRow extends StatelessWidget {
               // Issued
               Expanded(
                 flex: 4,
-                child: Container(
-                  padding: const EdgeInsets.only(left: 0, right: 8, top: 9, bottom: 9),
-                  decoration:  BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(5.r))
-                  ),
-                  child: Text(
-                    issued,
-                    style: AppTextStyles.poFont20BlackWh400.copyWith(
-                      fontSize: 12.sp,
-                      letterSpacing: 0.2,
+                child: GestureDetector(
+                  onTap: onIssuedTap,
+                  child: Container(
+                    padding: const EdgeInsets.only(left: 0, right: 8, top: 9, bottom: 9),
+                    decoration:  BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(5.r))
+                    ),
+                    child: Text(
+                      issued,
+                      style: AppTextStyles.poFont20BlackWh400.copyWith(
+                        fontSize: 12.sp,
+                        letterSpacing: 0.2,
+                      ),
                     ),
                   ),
                 ),

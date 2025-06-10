@@ -4,6 +4,7 @@ import 'package:invoice_simple/features/dashboard/data/models/invoice_model.dart
 import 'package:invoice_simple/features/dashboard/ui/cubit/business_cubit.dart';
 import 'package:invoice_simple/features/dashboard/ui/cubit/client_cubit.dart';
 import 'package:invoice_simple/features/dashboard/ui/cubit/items_cubit.dart';
+import 'package:invoice_simple/features/dashboard/ui/screens/edit_invoice_view.dart';
 import 'package:invoice_simple/features/dashboard/ui/screens/inoice_preview_view.dart';
 import 'package:invoice_simple/features/dashboard/ui/screens/invoice_dashboard_view.dart';
 import 'package:invoice_simple/features/dashboard/ui/screens/invoice_details_view.dart';
@@ -19,7 +20,7 @@ import 'package:invoice_simple/features/settings/ui/screens/signature_view.dart'
 abstract class AppRouter {
   static GoRouter getRouter(bool isNotFirstLogin) {
     return GoRouter(
-      initialLocation:  InvoiceDashboardView.routeName,
+      initialLocation: InvoiceDashboardView.routeName,
       //  isNotFirstLogin
       //     ? InvoiceDashboardView.routeName
       //     : OnBoardingView.routeName,
@@ -55,9 +56,20 @@ abstract class AppRouter {
         ),
         GoRoute(
           path: InvoiceDetailsView.routeName,
-          builder: (context, state) =>  InvoiceDetailsView(
-            invoice: state.extra as InvoiceModel,
-          ),
+          builder:
+              (context, state) =>
+                  InvoiceDetailsView(invoice: state.extra as InvoiceModel),
+        ),
+        GoRoute(
+          path: EditInvoiceView.routeName,
+          builder:
+              (context, state) => MultiBlocProvider(
+                providers: [
+                 BlocProvider(create: (context) => ClientCubit()),
+                  BlocProvider(create: (context) => ItemsCubit()),
+                ],
+                child: EditInvoiceView(invoice: state.extra as InvoiceModel),
+              ),
         ),
         //ToDo: -----------------Settings View-----------------
         GoRoute(
@@ -84,9 +96,8 @@ abstract class AppRouter {
         GoRoute(
           path: AddItemView.routeName,
           builder:
-              (context, state) => AddItemView(
-                clickable: state.extra as bool? ?? false,
-              ),
+              (context, state) =>
+                  AddItemView(clickable: state.extra as bool? ?? false),
         ),
         GoRoute(
           path: AddClientsView.routeName,

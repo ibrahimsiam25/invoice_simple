@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:invoice_simple/core/functions/update_invoice_by_number.dart';
 import 'package:invoice_simple/core/helpers/app_constants.dart';
 import 'package:invoice_simple/core/theme/app_colors.dart';
 import 'package:invoice_simple/core/theme/app_text_styles.dart';
@@ -8,24 +9,86 @@ import 'package:invoice_simple/features/dashboard/data/models/invoice_model.dart
 
 enum PaymentMethod { cash, check, bank, paypal }
 
-class InvoiceHeaderSection extends StatelessWidget {
+class InvoiceHeaderSection extends StatefulWidget {
   final bool isPaid;
   final PaymentMethod? paymentMethod;
   final InvoiceModel invoice;
-  final VoidCallback onAddReceivedPayment;
+ 
   const InvoiceHeaderSection({
     super.key,
     required this.isPaid,
     this.paymentMethod,
     required this.invoice,
-   required this.onAddReceivedPayment,
   });
 
+  @override
+  State<InvoiceHeaderSection> createState() => _InvoiceHeaderSectionState();
+}
+
+class _InvoiceHeaderSectionState extends State<InvoiceHeaderSection> {
+    double? receivedPayment;
+
+  @override
+  void initState() {
+    super.initState();
+    receivedPayment = widget.invoice.receivedPayment;
+  }
+  void showPaymentDialog(BuildContext context, double? currentValue) {
+    final controller = TextEditingController(text: currentValue?.toString() ?? '');
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColors.background,
+        title: const Text('Enter Received Payment'),
+        content: TextField(
+          controller: controller,
+          keyboardType: TextInputType.number,
+          decoration: const InputDecoration(hintText: "Payment Amount"),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child:  Text('Cancel',
+            style: AppTextStyles.poFont20BlackWh400.copyWith(
+              color: AppColors.primary,
+              fontSize: 14, 
+            )
+            ,
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              final value = double.tryParse(controller.text);
+              updateInvoiceByNumber(
+                invoiceNumber: widget.invoice.invoiceNumber,
+                updatedInvoice: widget.invoice.copyWith(
+                  receivedPayment: value ?? 0.0,
+                ),
+              );
+              if (value != null) {
+                setState(() {
+                  receivedPayment = value;
+                });
+                Navigator.pop(context);
+              }
+            },
+            child: Text('Save',
+           style:   AppTextStyles.poFont20BlackWh400.copyWith(
+              color: AppColors.primary,
+              fontSize: 14, 
+            )
+            ),
+          ),
+        ],
+      ),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     // اسم وسيلة الدفع للعرض
     String paymentMethodText() {
-      switch (paymentMethod) {
+      switch (widget.paymentMethod) {
         case PaymentMethod.cash:
           return "Cash";
         case PaymentMethod.check:
@@ -80,7 +143,7 @@ class InvoiceHeaderSection extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                    invoice.businessAccount.name,
+                                    widget.invoice.businessAccount.name,
                                       style: AppTextStyles.poFont20BlackWh600
                                           .copyWith(fontSize: 10.sp),
                                     ),
@@ -113,7 +176,7 @@ class InvoiceHeaderSection extends StatelessWidget {
                                     ),
                                     const SizedBox(height: 2),
                                     Text(
-                                      "#${invoice.invoiceNumber.toString().padLeft(3, '0')}",
+                                      "#${widget.invoice.invoiceNumber.toString().padLeft(3, '0')}",
                                       style: AppTextStyles.poFont20BlackWh400
                                           .copyWith(
                                             fontSize: 8.sp,
@@ -121,7 +184,7 @@ class InvoiceHeaderSection extends StatelessWidget {
                                           ),
                                     ),
                                     Text(
-                                      'Issued ${DateFormat('dd/MM/yyyy').format(invoice.issuedDate)}',
+                                      'Issued ${DateFormat('dd/MM/yyyy').format(widget.invoice.issuedDate)}',
                                       style: AppTextStyles.poFont20BlackWh400
                                           .copyWith(
                                             fontSize: 8.sp,
@@ -186,7 +249,7 @@ class InvoiceHeaderSection extends StatelessWidget {
                     ],
                   ),
                   child:
-                      isPaid && paymentMethod != null
+                      widget.isPaid && widget.paymentMethod != null
                           ? Column(
                             children: [
                               Row(
@@ -239,7 +302,7 @@ class InvoiceHeaderSection extends StatelessWidget {
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                "${DateFormat('MMMM').format(invoice.issuedDate)}",
+                                "${DateFormat('MMMM').format(widget.invoice.issuedDate)}",
                                 style: AppTextStyles.poFont20BlackWh400
                                     .copyWith(
                                       color: AppColors.blueGrey,
@@ -249,7 +312,7 @@ class InvoiceHeaderSection extends StatelessWidget {
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                "${invoice.total.toStringAsFixed(2)} \$",
+                                "${widget.invoice.total.toStringAsFixed(2)} \$",
                                 style: TextStyle(
                                   color: AppColors.black,
                                   fontSize: 32,
@@ -271,37 +334,67 @@ class InvoiceHeaderSection extends StatelessWidget {
                               ),
                               SizedBox(height: 7.h),
                               Text(
-                                '${invoice.total.toStringAsFixed(2)} \$',
+                                '${widget.invoice.total.toStringAsFixed(2)} \$',
                                 style: AppTextStyles.poFont20BlackWh600
                                     .copyWith(fontSize: 28.sp),
                                 textAlign: TextAlign.center,
                               ),
                               const SizedBox(height: 14),
-                              OutlinedButton(
-                                style: OutlinedButton.styleFrom(
-                                  side: BorderSide(
-                                    color: AppColors.extraLightGreyDivder,
-                                    width: 1.5,
-                                  ),
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 5,
-                                    horizontal: 15,
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  foregroundColor: AppColors.black,
-                                ),
-                                onPressed: onAddReceivedPayment,
-                                child: Text(
-                                  '+ Add Receivesd Payment',
-                                  style: AppTextStyles.poFont20BlackWh400
-                                      .copyWith(
-                                        fontSize: 14.sp,
-                                        color: AppColors.black,
-                                      ),
-                                ),
-                              ),
+                           receivedPayment != null && receivedPayment != 0
+  ? InkWell(
+      onTap: () => showPaymentDialog(context, receivedPayment, ),
+      child: Row(
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: [
+    Text(
+      'Received Payment: ',
+      style: AppTextStyles.poFont20BlackWh400.copyWith(
+        fontSize: 14.sp,
+        color: AppColors.blueGrey,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+    Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+      decoration: BoxDecoration(
+        color: AppColors.primary,
+        borderRadius: BorderRadius.circular(7),
+      ),
+      child: Text(
+        '${receivedPayment!.toStringAsFixed(2)} \$',
+        style: AppTextStyles.poFont20BlackWh400.copyWith(
+          color: AppColors.white,
+          fontWeight: FontWeight.bold,
+          fontSize: 14.sp,
+        ),
+      ),
+    ),
+  ],
+)
+,
+    )
+  : OutlinedButton(
+      style: OutlinedButton.styleFrom(
+        side: BorderSide(
+          color: AppColors.extraLightGreyDivder,
+          width: 1.5,
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        foregroundColor: AppColors.black,
+      ),
+      onPressed: () => showPaymentDialog(context, null, ),
+      child: Text(
+        '+ Add Received Payment',
+        style: AppTextStyles.poFont20BlackWh400.copyWith(
+          fontSize: 14.sp,
+          color: AppColors.black,
+        ),
+      ),
+    )  
+,
                             ],
                           ),
                 ),
@@ -313,3 +406,4 @@ class InvoiceHeaderSection extends StatelessWidget {
     );
   }
 }
+

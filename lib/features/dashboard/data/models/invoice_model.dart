@@ -1,5 +1,4 @@
 import 'package:hive/hive.dart';
-import 'package:invoice_simple/features/dashboard/ui/widgets/invoice_header_section.dart';
 import 'package:invoice_simple/features/settings/data/model/business_user_model.dart';
 import 'package:invoice_simple/features/settings/data/model/client_model.dart';
 import 'package:invoice_simple/features/settings/data/model/item_model.dart';
@@ -40,9 +39,28 @@ class InvoiceModel extends HiveObject {
 @HiveField(9)
   bool? isEstimated;
 
+@HiveField(10)
+String? notes;
+
+@HiveField(11)
+double? invoiceDiscount;
+
+@HiveField(12)
+double? invoiceTax;
+
+@HiveField(13)
+double? invoiceSubtotal;
+
+@HiveField(14)
+double? invoiceTotal;
+
+
+
+@HiveField(15)
+double? receivedPayment;
+
   InvoiceModel({
     required this.issuedDate,
-  
     required this.invoiceNumber,
     required this.businessAccount,
     required this.client,
@@ -52,6 +70,13 @@ class InvoiceModel extends HiveObject {
     required this.imagePath,
     this.paymentMethod,
     this.isEstimated ,
+    this.notes,
+    this.invoiceDiscount,
+    this.invoiceTax,
+    this.receivedPayment,
+    this.invoiceSubtotal,
+    this.invoiceTotal,
+    
   });
   InvoiceModel copyWith({
     DateTime? issuedDate,
@@ -63,6 +88,14 @@ class InvoiceModel extends HiveObject {
     String? currency,
     String? imagePath,
     String? paymentMethod,
+    bool? isEstimated,
+    String? notes,
+    double? invoiceDiscount,
+    double? invoiceTax,
+    double? receivedPayment,
+    double? invoiceSubtotal,
+    double? invoiceTotal,
+
   }) {
     return InvoiceModel(
       issuedDate: issuedDate ?? this.issuedDate,
@@ -75,6 +108,13 @@ class InvoiceModel extends HiveObject {
       imagePath: imagePath ?? this.imagePath,
       paymentMethod: paymentMethod ?? this.paymentMethod,
       isEstimated: isEstimated ?? isEstimated,
+      notes: notes ?? this.notes,
+      invoiceDiscount: invoiceDiscount ?? this.invoiceDiscount,
+      invoiceTax: invoiceTax ?? this.invoiceTax,
+      receivedPayment: receivedPayment ?? this.receivedPayment,
+      invoiceSubtotal: invoiceSubtotal ?? this.invoiceSubtotal,
+      invoiceTotal: invoiceTotal ?? this.invoiceTotal,
+
     );
   }
 }

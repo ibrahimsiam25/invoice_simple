@@ -9,10 +9,16 @@ import 'package:invoice_simple/core/theme/app_text_styles.dart';
 import 'package:invoice_simple/features/dashboard/ui/widgets/add_row_button.dart';
 import 'package:svg_flutter/svg.dart';
 
+
 class NewInvoiceAddPhoto extends StatefulWidget {
   final void Function(File image)? onImageSelected;
+  final String? initialImagePath;
 
-  const NewInvoiceAddPhoto  ({super.key, this.onImageSelected});
+  const NewInvoiceAddPhoto({
+    super.key,
+    this.onImageSelected,
+    this.initialImagePath,
+  });
 
   @override
   State<NewInvoiceAddPhoto> createState() => _NewInvoiceAddPhotoState();
@@ -20,6 +26,18 @@ class NewInvoiceAddPhoto extends StatefulWidget {
 
 class _NewInvoiceAddPhotoState extends State<NewInvoiceAddPhoto> {
   File? _selectedImage;
+
+@override
+void initState() {
+  super.initState();
+  if (widget.initialImagePath != null && widget.initialImagePath!.isNotEmpty) {
+    final file = File(widget.initialImagePath!);
+    if (file.existsSync()) {
+      _selectedImage = file;
+    }
+  }
+}
+
 
   Future<void> _pickImage() async {
     final image = await ImagePickerHelper.pickImageFromGallery();
@@ -41,7 +59,7 @@ class _NewInvoiceAddPhotoState extends State<NewInvoiceAddPhoto> {
                 color: AppColors.blueGrey,
                 borderRadius: BorderRadius.circular(10.r),
               ),
-              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
               child: Row(
                 children: [
                   SvgPicture.asset(Assets.imagesSvgStar),
@@ -60,21 +78,25 @@ class _NewInvoiceAddPhotoState extends State<NewInvoiceAddPhoto> {
           )
         : GestureDetector(
             onTap: _pickImage,
-          child: Container(
-          height: 120.h,
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          decoration: BoxDecoration(color: AppColors.white),
-          child: DottedBorder(
-            borderType: BorderType.RRect,
-            radius: const Radius.circular(5),
-            color: AppColors.lightBlue,
-            dashPattern: const [4, 4],
-            strokeWidth: 2,
-            child: Center(
-              child:Image.file(_selectedImage!, height: 50),
-            ),
-          ),
+            child: Container(
+              height: 120.h,
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(color: AppColors.white),
+              child: DottedBorder(
+                borderType: BorderType.RRect,
+                radius: const Radius.circular(5),
+                color: AppColors.lightBlue,
+                dashPattern: const [4, 4],
+                strokeWidth: 2,
+                child: Center(
+                  child: Image.file(
+                    _selectedImage!,
+                    height: 50,
+                    fit: BoxFit.cover,
+                  ),
                 ),
-        );
+              ),
+            ),
+          );
   }
 }

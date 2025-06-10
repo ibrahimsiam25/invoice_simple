@@ -170,7 +170,7 @@ class InvoiceDashboardViewBody extends StatelessWidget {
                                   circleColor: color,
                                   title: invoice.client.billTo,
                                   subtitle: (invoice.paymentMethod?.isEmpty ?? true)
-                                      ? 'Outstanding'
+                                      ? 'Received \$ ${invoice.receivedPayment??0} '
                                       : "Invoice Complete",
                                   trailing: formattedDate,
                                 ),

@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:invoice_simple/core/functions/get_invoice_total.dart';
@@ -12,11 +13,15 @@ import 'package:share_plus/share_plus.dart';
 
 Future<void> printInvoice(InvoiceModel invoice, BuildContext context) async {
   // عرض Loading dialog
+ 
   showDialog(
     context: context,
     barrierDismissible: false,
-    builder: (context) => Center(child: CircularProgressIndicator()),
+    builder: (context) => const Center(
+      child: CupertinoActivityIndicator(radius: 18), // تقدر تغير radius حسب الحاجة
+    ),
   );
+
 
   try {
     final pdfBytes = await generateInvoicePdfBytes(invoice);
@@ -34,10 +39,12 @@ Future<void> printInvoice(InvoiceModel invoice, BuildContext context) async {
 
 Future<void> shareInvoice(InvoiceModel invoice, BuildContext context) async {
   // عرض Loading dialog
-  showDialog(
+ showDialog(
     context: context,
     barrierDismissible: false,
-    builder: (context) => Center(child: CircularProgressIndicator()),
+    builder: (context) => const Center(
+      child: CupertinoActivityIndicator(radius: 18), // تقدر تغير radius حسب الحاجة
+    ),
   );
 
   try {

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
@@ -45,30 +46,44 @@ class _InvoiceHeaderSectionState extends State<InvoiceHeaderSection> {
       text: currentValue?.toString() ?? '',
     );
 
-    showDialog(
+   showCupertinoDialog(
       context: context,
-      builder:
-          (context) => AlertDialog(
-            backgroundColor: AppColors.background,
-            title: const Text('Enter Received Payment'),
-            content: TextField(
+      builder: (context) => CupertinoAlertDialog(
+        title: Text(
+          'Enter Received Payment',
+          style: AppTextStyles.poFont20BlackWh600.copyWith(fontSize: 16.sp),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: 8),
+            CupertinoTextField(
               controller: controller,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(hintText: "Payment Amount"),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text(
-                  'Cancel',
-                  style: AppTextStyles.poFont20BlackWh400.copyWith(
-                    color: AppColors.primary,
-                    fontSize: 14,
-                  ),
-                ),
+              placeholder: "Payment Amount",
+              style: AppTextStyles.poFont20BlackWh400.copyWith(
+                fontSize: 14.sp,
+                color: AppColors.black,
               ),
-              TextButton(
-                onPressed: () {
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 6),
+            ),
+          ],
+        ),
+        actions: [
+          CupertinoDialogAction(
+            child: Text(
+              'Cancel',
+              style: AppTextStyles.poFont20BlackWh400.copyWith(color: AppColors.primary, fontSize: 14.sp),
+            ),
+            onPressed: () => Navigator.pop(context),
+          ),
+          CupertinoDialogAction(
+            isDefaultAction: true,
+            child: Text(
+              'Save',
+              style: AppTextStyles.poFont20BlackWh400.copyWith(color: AppColors.primary, fontSize: 14.sp),
+            ),
+          onPressed: () {
                   final value = double.tryParse(controller.text);
                   updateInvoiceByNumber(
                     invoiceNumber: widget.invoice.invoiceNumber,
@@ -83,16 +98,9 @@ class _InvoiceHeaderSectionState extends State<InvoiceHeaderSection> {
                     Navigator.pop(context);
                   }
                 },
-                child: Text(
-                  'Save',
-                  style: AppTextStyles.poFont20BlackWh400.copyWith(
-                    color: AppColors.primary,
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-            ],
           ),
+        ],
+      ),
     );
   }
 

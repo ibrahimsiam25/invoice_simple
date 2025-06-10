@@ -21,10 +21,9 @@ abstract class AppRouter {
   static GoRouter getRouter(bool isNotFirstLogin) {
     return GoRouter(
       initialLocation:
-          // isNotFirstLogin
-          //     ? InvoiceDashboardView.routeName
-          //     :
-          OnBoardingView.routeName,
+          isNotFirstLogin
+              ? InvoiceDashboardView.routeName
+              : OnBoardingView.routeName,
       routes: [
         GoRoute(
           path: OnBoardingView.routeName,

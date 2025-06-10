@@ -165,7 +165,7 @@ class _AddItemViewBodyState extends State<AddItemViewBody> {
                           ),
                           SizedBox(width: 8.w),
                           Text(
-                            "${item.unitPrice?.toStringAsFixed(2) ?? "0.00"} \$",
+                            "${item.quantity ?? 1} x ${item.unitPrice?.toStringAsFixed(2) ?? "0.00"} \$",
                             style: AppTextStyles.poFont20BlackWh400.copyWith(
                               fontSize: 14.sp,
                               color: AppColors.blueGrey,

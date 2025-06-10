@@ -148,7 +148,14 @@ class InvoiceDashboardViewBody extends StatelessWidget {
                   ),
                  
                   filteredList.isEmpty
-                      ? const Center(child: Text("no invoice"))
+                      ?  Column(
+                        children: [
+                          SizedBox(height: 50.h),
+                          Center(child: Text("no invoice"
+                              ,style: AppTextStyles.poFont20BlackWh400,
+                          )),
+                        ],
+                      )
                       : Padding(
                           padding: EdgeInsets.symmetric(horizontal: AppConstants.paddingHorizontal),
                           child: ListView.builder(

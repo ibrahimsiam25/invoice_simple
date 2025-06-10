@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:invoice_simple/core/functions/get_invoice_total.dart';
 import 'package:invoice_simple/core/helpers/app_constants.dart';
 import 'package:invoice_simple/core/helpers/shared_pref_helper.dart';
 import 'package:invoice_simple/core/theme/app_colors.dart';
@@ -120,7 +121,7 @@ class NewInvoiceViewBodyState extends State<NewInvoiceViewBody> {
 
     final box = await Hive.openBox<InvoiceModel>(AppConstants.hiveInvoiceBox);
 
-    // ✅ Using totalAmount from ItemsCubit instead of manual calculation
+    final invoiceCalculationResult = calculateInvoiceTotals(selectedItems);
     final newInvoice = InvoiceModel(
       issuedDate: DateTime.now(),
       invoiceNumber: invoiceNumber,
@@ -131,6 +132,10 @@ class NewInvoiceViewBodyState extends State<NewInvoiceViewBody> {
       currency: currency, // ✅ From Cubit
       imagePath: logoImage?.path ?? '',
       isEstimated: widget.isEstimate,
+      invoiceDiscount:invoiceCalculationResult.totalDiscount,
+      invoiceTax: invoiceCalculationResult.totalTax,
+      invoiceSubtotal: invoiceCalculationResult.subtotal,
+      invoiceTotal: invoiceCalculationResult.total,
     );
 
     await box.add(newInvoice);

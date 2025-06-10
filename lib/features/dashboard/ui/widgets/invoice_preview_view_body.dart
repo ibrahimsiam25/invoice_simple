@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:invoice_simple/core/functions/get_invoice_total.dart';
 import 'package:invoice_simple/core/theme/app_colors.dart';
 import 'package:invoice_simple/core/theme/app_text_styles.dart';
 import 'package:invoice_simple/features/dashboard/data/models/invoice_model.dart';
@@ -11,6 +12,8 @@ class InvoicePreviewViewBody extends StatelessWidget {
   final InvoiceModel invoice;
   @override
   Widget build(BuildContext context) {
+         final invoiceCalculationResult= calculateInvoiceTotals(invoice.items);
+    final total =invoice.invoiceTotal?? invoiceCalculationResult.total;
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -220,11 +223,7 @@ class InvoicePreviewViewBody extends StatelessWidget {
                         ),
                       ),
                       child: Text(
-                        "${invoice.currency} ${invoice.items.fold<double>(0, (sum, item) {
-                          final qty = item.quantity ?? 0;
-                          final price = item.unitPrice ?? 0;
-                          return sum + (qty * price);
-                        }).toStringAsFixed(2)}",
+                        total.toStringAsFixed(2),
                         overflow: TextOverflow.ellipsis,
                         style: AppTextStyles.poFont20BlackWh600.copyWith(
                           fontSize: 10.sp,

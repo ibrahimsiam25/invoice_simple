@@ -94,13 +94,13 @@ Future<Uint8List> generateInvoicePdfBytes(InvoiceModel invoice) async {
       signatureBytes = await file.readAsBytes();
     }
   }
-final totals = calculateInvoiceTotals(invoice);
-double subtotal = totals.subtotal;
-double totalDiscount = totals.totalDiscount;
-double totalTax = totals.totalTax;
-final total = totals.total;
-
+final totals = calculateInvoiceTotals(invoice.items);
+double subtotal =invoice.invoiceSubtotal?? totals.subtotal;
+double totalDiscount = invoice.invoiceDiscount?? totals.totalDiscount;
+double totalTax = invoice.invoiceTax?? totals.totalTax;
+final total = invoice.invoiceTotal?? totals.total;
  
+    
    pdf.addPage(
   pw.Page(
     pageFormat: PdfPageFormat.a4,

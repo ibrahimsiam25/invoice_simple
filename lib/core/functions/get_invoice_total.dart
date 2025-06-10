@@ -1,18 +1,22 @@
 import 'package:invoice_simple/features/dashboard/data/models/invoice_model.dart';
+import 'package:invoice_simple/features/settings/data/model/item_model.dart';
 
 
 double getInvoiceTotal(InvoiceModel invoice) {
-  double subtotal = 0;
-
-  for (final item in invoice.items) {
-    final qty = item.quantity ?? 0;
-    final price = item.unitPrice ?? 0;
-    subtotal += price * qty;
+  
+  if(invoice.invoiceTotal != null ) {
+  
+    return invoice.invoiceTotal!;
+  }else{
+ 
+  
+    
+final invoiceCalculationResult = calculateInvoiceTotals(invoice.items);
+    return invoiceCalculationResult.total;
   }
-
-  return subtotal;
+ 
 }
-
+ 
 
 
 
@@ -29,32 +33,38 @@ class InvoiceCalculationResult {
     required this.total,
   });
 }
+InvoiceCalculationResult calculateInvoiceTotals(List<ItemModel> items) {
 
-InvoiceCalculationResult calculateInvoiceTotals(InvoiceModel invoice) {
   double subtotal = 0;
   double totalDiscount = 0;
   double totalTax = 0;
+   print("*********************************");
+  for (final item in items) {   
+      print("-------------------------------------");
+    print("price ${item.unitPrice}");
+print("quantity ${item.quantity}");  
+    print("discount ${item.discount}");
+    print("taxable ${item.taxableAmount}");
+    print("-------------------------------------");
+    final double price = item.unitPrice ?? 0; 
+    final int qty = item.quantity ?? 0;
 
-  for (final item in invoice.items) {
-    final qty = item.quantity ?? 0;
-    final price = item.unitPrice ?? 0;
+    final double amountBeforeDiscount = price * qty;
 
-    final amountBeforeDiscount = price * qty;
+    final double discountPercent = item.discountActive ? (item.discount ?? 0) : 0;
+    final double discountAmount = amountBeforeDiscount * (discountPercent / 100);
 
-    final discountPercent = (item.discountActive) ? (item.discount ?? 0) : 0;
-    final discountAmount = amountBeforeDiscount * (discountPercent / 100);
+    final double amountAfterDiscount = amountBeforeDiscount - discountAmount;
 
-    final amountAfterDiscount = amountBeforeDiscount - discountAmount;
-
-    final taxPercent = (item.taxable) ? (item.taxableAmount ?? 0) : 0;
-    final itemTax = amountAfterDiscount * (taxPercent / 100);
+    final double taxPercent = item.taxable ? (item.taxableAmount ?? 0) : 0;
+    final double itemTax = amountAfterDiscount * (taxPercent / 100);
 
     subtotal += amountBeforeDiscount;
     totalDiscount += discountAmount;
     totalTax += itemTax;
   }
 
-  final total = subtotal - totalDiscount + totalTax;
+  final double total = subtotal - totalDiscount + totalTax;
 
   return InvoiceCalculationResult(
     subtotal: subtotal,
@@ -63,30 +73,3 @@ InvoiceCalculationResult calculateInvoiceTotals(InvoiceModel invoice) {
     total: total,
   );
 }
-
-
-
-// double getInvoiceTotal(InvoiceModel invoice) {
-//   double subtotal = 0;
-//   double totalDiscount = 0;
-//   double totalTax = 0;
-
-//   for (final item in invoice.items) {
-//     final qty = item.quantity ?? 0;
-//     final price = item.unitPrice ?? 0;
-
-//     final amountBeforeDiscount = price * qty;
-//     final discountPercent = (item.discountActive) ? (item.discount ?? 0) : 0;
-//     final discountAmount = amountBeforeDiscount * (discountPercent / 100);
-//     final amountAfterDiscount = amountBeforeDiscount - discountAmount;
-//     final taxPercent = (item.taxable) ? (item.taxableAmount ?? 0) : 0;
-//     final itemTax = amountAfterDiscount * (taxPercent / 100);
-
-//     subtotal += amountBeforeDiscount;
-//     totalDiscount += discountAmount;
-//     totalTax += itemTax;
-//   }
-
-//   return subtotal - totalDiscount + totalTax;
-// }
-

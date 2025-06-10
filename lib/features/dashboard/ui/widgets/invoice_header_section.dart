@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:invoice_simple/core/functions/get_invoice_total.dart';
 import 'package:invoice_simple/core/functions/update_invoice_by_number.dart';
 import 'package:invoice_simple/core/helpers/app_constants.dart';
 import 'package:invoice_simple/core/theme/app_colors.dart';
@@ -28,9 +29,14 @@ class InvoiceHeaderSection extends StatefulWidget {
 class _InvoiceHeaderSectionState extends State<InvoiceHeaderSection> {
   double? receivedPayment;
 
-  @override
+       
+    double total = 0;
+
+  @override   
   void initState() {
     super.initState();
+     final invoiceCalculationResult= calculateInvoiceTotals(widget.invoice.items);
+      total =widget.invoice.invoiceTotal?? invoiceCalculationResult.total;
     receivedPayment = widget.invoice.receivedPayment;
   }
 
@@ -318,7 +324,7 @@ class _InvoiceHeaderSectionState extends State<InvoiceHeaderSection> {
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                "${widget.invoice.total.toStringAsFixed(2)} \$",
+                             total.toStringAsFixed(2) + ' \$',
                                 style: TextStyle(
                                   color: AppColors.black,
                                   fontSize: 32,
@@ -340,7 +346,7 @@ class _InvoiceHeaderSectionState extends State<InvoiceHeaderSection> {
                               ),
                               SizedBox(height: 7.h),
                               Text(
-                                '${widget.invoice.total.toStringAsFixed(2)} \$',
+                                   total.toStringAsFixed(2) + ' \$',
                                 style: AppTextStyles.poFont20BlackWh600
                                     .copyWith(fontSize: 28.sp),
                                 textAlign: TextAlign.center,

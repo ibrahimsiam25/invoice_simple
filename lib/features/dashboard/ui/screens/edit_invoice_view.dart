@@ -66,10 +66,11 @@ class EditInvoiceViewBodyState extends State<EditInvoiceViewBody> {
 late BusinessUserModel businessUserModel;
 TextEditingController notesController = TextEditingController();
   File? logoImage;
-double? updatedSubtotal;
-double? updatedDiscount;
-double? updatedTax;
-double? updatedTotalAmount;
+double updatedSubtotal=0;
+double updatedDiscount=0;
+double updatedTax=0;
+double updatedTotalAmount=0;
+
 
   @override
   void initState() {
@@ -80,6 +81,12 @@ double? updatedTotalAmount;
     itemsCubit.addItems(widget.invoice.items);
     businessUserModel = widget.invoice.businessAccount;
     notesController.text = widget.invoice.notes ?? '';
+    final totals = calculateInvoiceTotals(widget.invoice.items);  
+     updatedSubtotal=widget.invoice.invoiceSubtotal?? totals.subtotal;
+ updatedDiscount=widget.invoice.invoiceDiscount?? totals.totalDiscount;
+ updatedTax=widget.invoice.invoiceTax?? totals.totalTax;
+ updatedTotalAmount=widget.invoice.invoiceTotal?? totals.total;
+
   }   
 
   ClientModel? get selectedClient => 
@@ -154,20 +161,20 @@ invoiceSubtotal: updatedSubtotal,
   invoiceTotal: updatedTotalAmount,
     );
 
-print("Issued Date: ${updatedInvoice.issuedDate}");
-print("Invoice Number: ${updatedInvoice.invoiceNumber}");
-print("Business Account: ${updatedInvoice.businessAccount}");
-print("Client: ${updatedInvoice.client}");
-print("Items: ${updatedInvoice.items}");
-print("Total: ${updatedInvoice.total}");
-print("Currency: ${updatedInvoice.currency}");
-print("ImagePath: ${updatedInvoice.imagePath}");
-print("Notes: ${updatedInvoice.notes}");
-print("=================================================");
-print("Invoice Subtotal: ${updatedInvoice.invoiceSubtotal}");
-print("Invoice Discount: ${updatedInvoice.invoiceDiscount}");
-print("Invoice Tax: ${updatedInvoice.invoiceTax}");
-print("Invoice Total: ${updatedInvoice.invoiceTotal}");
+// print("Issued Date: ${updatedInvoice.issuedDate}");
+// print("Invoice Number: ${updatedInvoice.invoiceNumber}");
+// print("Business Account: ${updatedInvoice.businessAccount}");
+// print("Client: ${updatedInvoice.client}");
+// print("Items: ${updatedInvoice.items}");
+// print("Total: ${updatedInvoice.total}");
+// print("Currency: ${updatedInvoice.currency}");
+// print("ImagePath: ${updatedInvoice.imagePath}");
+// print("Notes: ${updatedInvoice.notes}");
+// print("=================================================");
+// print("Invoice Subtotal: ${updatedInvoice.invoiceSubtotal}");
+// print("Invoice Discount: ${updatedInvoice.invoiceDiscount}");
+// print("Invoice Tax: ${updatedInvoice.invoiceTax}");
+// print("Invoice Total: ${updatedInvoice.invoiceTotal}");
 
     updateInvoiceByNumber(
       invoiceNumber: widget.invoice.invoiceNumber,
@@ -336,29 +343,36 @@ print("Invoice Total: ${updatedInvoice.invoiceTotal}");
             SectionLabel(label: 'Summary'),
             BlocBuilder<ItemsCubit, ItemsState>(
               builder: (context, itemsState) {                     
-                final invoiceTotals = calculateInvoiceTotals(
-                  widget.invoice.copyWith(
-                    items: itemsState.selectedItems,
-                   
-                  ),
-                );
-                final subtotal = widget.invoice.invoiceSubtotal ?? invoiceTotals.subtotal;
-    final discount = widget.invoice.invoiceDiscount ?? invoiceTotals.totalDiscount;
-    final tax = widget.invoice.invoiceTax ?? invoiceTotals.totalTax;
-                return SummarySection(
+            
+final totals = calculateInvoiceTotals(widget.invoice.items);
+double subtotal =widget.invoice.invoiceSubtotal?? totals.subtotal;
+double totalDiscount = widget.invoice.invoiceDiscount?? totals.totalDiscount;
+double totalTax = widget.invoice.invoiceTax?? totals.totalTax;
+                return SummarySection(    
                   subtotal: subtotal,
-                  discount: discount ,
-                  tax: tax, 
+                  discount: totalDiscount,     
+                  tax:totalTax,
                   currency: widget.invoice.currency,               
 onValuesChanged: (values) {
   setState(() {
-    updatedSubtotal = values['subtotal'];
-    updatedDiscount = values['discount'];
-    updatedTax = values['tax'];
-    updatedTotalAmount = values['totalAmount'];
-  });
-},
+    if (values['subtotal'] != null && values['subtotal'] is double && values['subtotal'] != 0) { 
+ 
+  updatedSubtotal = values['subtotal']!;  
+}
+    if (values['discount'] != null && values['discount'] is double && values['discount'] != 0) {
+  updatedDiscount = values['discount']!;
+}
+    if (values['tax'] != null && values['tax'] is double && values['tax'] != 0) {
+  updatedTax = values['tax']!;
+}
 
+if (values['totalAmount'] != null && values['totalAmount'] is double && values['totalAmount'] != 0) {
+   updatedTotalAmount = values['totalAmount']!;
+}
+  
+  });     
+},      
+    
 
 )
 ; 

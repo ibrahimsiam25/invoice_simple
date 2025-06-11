@@ -41,7 +41,14 @@ class _AddItemViewState extends State<AddItemView> {
             context: context,
             isScrollControlled: true,
             backgroundColor: Colors.transparent,
-            builder: (context) => const NewItemBottomSheet(),
+            constraints: BoxConstraints(
+    maxWidth: MediaQuery.of(context).size.width,
+    minWidth: MediaQuery.of(context).size.width,
+  ),
+         builder: (context) => SizedBox(
+    width: MediaQuery.of(context).size.width,
+    child: NewItemBottomSheet(),
+  ),
           );
         },
       ),

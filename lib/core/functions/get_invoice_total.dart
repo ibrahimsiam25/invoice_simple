@@ -38,17 +38,10 @@ InvoiceCalculationResult calculateInvoiceTotals(List<ItemModel> items) {
   double subtotal = 0;
   double totalDiscount = 0;
   double totalTax = 0;
-   print("*********************************");
+  
   for (final item in items) {   
-      print("-------------------------------------");
-    print("price ${item.unitPrice}");
-print("quantity ${item.quantity}");  
-    print("discount ${item.discount}");
-    print("taxable ${item.taxableAmount}");
-    print("-------------------------------------");
     final double price = item.unitPrice ?? 0; 
     final int qty = item.quantity ?? 0;
-
     final double amountBeforeDiscount = price * qty;
 
     final double discountPercent = item.discountActive ? (item.discount ?? 0) : 0;

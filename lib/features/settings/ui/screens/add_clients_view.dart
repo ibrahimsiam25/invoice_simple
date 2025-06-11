@@ -37,12 +37,19 @@ class _AddClientsViewState extends State<AddClientsView> {
         actionIcon: Icons.add,
         title: 'Clients',
         onAction: () {
-          showModalBottomSheet(
-            isScrollControlled: true,
-            backgroundColor: Colors.transparent,
-            context: context,
-            builder: (context) => NewClientBottomSheet(),
-          );
+        showModalBottomSheet(
+  isScrollControlled: true,
+  backgroundColor: Colors.transparent,
+  context: context,
+  constraints: BoxConstraints(
+    maxWidth: MediaQuery.of(context).size.width,
+    minWidth: MediaQuery.of(context).size.width,
+  ),
+  builder: (context) => SizedBox(
+    width: MediaQuery.of(context).size.width,
+    child: NewClientBottomSheet(),
+  ),
+);
         },
       ),
       body: AddClientsViewBody(

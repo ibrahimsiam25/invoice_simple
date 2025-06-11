@@ -44,9 +44,16 @@ class _CurrencyFieldState extends State<CurrencyField> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
       ),
-      builder: (context) => CurrencyBottomSheet(
-        items: widget.items,
-        selected: selectedCurrency,
+       constraints: BoxConstraints(
+    maxWidth: MediaQuery.of(context).size.width,
+    minWidth: MediaQuery.of(context).size.width,
+  ),
+      builder: (context) => SizedBox(
+           width: MediaQuery.of(context).size.width,
+        child: CurrencyBottomSheet(
+          items: widget.items,
+          selected: selectedCurrency,
+        ),
       ),
     );
     if (result != null && result.code != selectedCurrency.code) {

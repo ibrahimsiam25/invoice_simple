@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:invoice_simple/core/functions/get_invoice_total.dart';
+import 'package:invoice_simple/core/functions/load_and_validate_images.dart';
 import 'package:invoice_simple/features/dashboard/data/models/invoice_model.dart';
 import 'dart:io';
 import 'package:pdf/pdf.dart';
@@ -90,17 +91,15 @@ Future<void> shareInvoice(InvoiceModel invoice, BuildContext context) async {
 
 
 Future<Uint8List> generateInvoicePdfBytes(InvoiceModel invoice) async {
+    // تحميل الصور
+ final images = await loadAndValidateImages(invoice);
+final signatureBytes = images['signature'];
+final invoiceBytes = images['invoice'];
+
   String? title = (invoice.isEstimated ?? false) ? 'ESTIMATE' : 'INVOICE';
   final pdf = pw.Document();
-  Uint8List? signatureBytes;
 
-  if (invoice.businessAccount.imageSignature != null &&
-      invoice.businessAccount.imageSignature!.isNotEmpty) {
-    final file = File(invoice.businessAccount.imageSignature!);
-    if (await file.exists()) {
-      signatureBytes = await file.readAsBytes();
-    }
-  }
+
 final totals = calculateInvoiceTotals(invoice.items);
 double subtotal =invoice.invoiceSubtotal?? totals.subtotal;
 double totalDiscount = invoice.invoiceDiscount?? totals.totalDiscount;
@@ -553,35 +552,9 @@ pw.Expanded(
 
   ],
 ),
-  if (signatureBytes != null)
-              pw.Align(
-                alignment: pw.Alignment.centerRight,
-                child: pw.Column(
-                  crossAxisAlignment: pw.CrossAxisAlignment.end,
-                  children: [
-                    pw.SizedBox(height: 35),
-                    pw.Text(
-                      'Signature:',
-                      style: pw.TextStyle(fontSize: 15, fontWeight: pw.FontWeight.bold),
-                    ),
-                    pw.Text(
-                      '____________________',
-                      style: pw.TextStyle(fontSize: 12),
-                    ),
-                    pw.SizedBox(height: 5),
-                    pw.Image(
-                      pw.MemoryImage(signatureBytes),
-                      width: 50,
-                      height: 50,
-                      fit: pw.BoxFit.cover,
-                    ),
-                  ],
-                ),
-              )  
-           
-          ,
-        
-     
+       pw.SizedBox(height: 50),
+     buildImagesRow(signatureBytes, invoiceBytes),
+    
                 pw.SizedBox(height: 80),
             ],
           ),

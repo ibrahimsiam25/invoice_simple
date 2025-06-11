@@ -127,7 +127,7 @@ class _InvoiceHeaderSectionState extends State<InvoiceHeaderSection> {
       child: Center(
         child: SizedBox(
           width: double.infinity,
-          height: 270,
+          height: 320.h,
           child: Stack(
             clipBehavior: Clip.none,
             alignment: Alignment.topCenter,
@@ -137,7 +137,7 @@ class _InvoiceHeaderSectionState extends State<InvoiceHeaderSection> {
                 left: 10,
                 right: 10,
                 child: SizedBox(
-                  height: 150,
+                  height: 150.h,
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 50.w),
                     child: Material(
@@ -251,8 +251,8 @@ class _InvoiceHeaderSectionState extends State<InvoiceHeaderSection> {
                 top: 90,
                 left: 0,
                 right: 0,
-                child: Container(
-                  height: 180,
+                child: Container( 
+                  height: 200.h,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 24,
                     vertical: 13,

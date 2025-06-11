@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:invoice_simple/core/helpers/app_assets.dart';
 import 'package:invoice_simple/core/theme/app_colors.dart';
 import 'package:invoice_simple/core/theme/app_text_styles.dart';
@@ -129,16 +130,10 @@ class _InvoiceStatusSectionState extends State<InvoiceStatusSection> {
   }
 
   String _formatDate(DateTime date) {
-    return "${date.day} ${_getMonthName(date.month)} ${date.year}";
+    return "${DateFormat('yyyy-MM-dd').format(date)}";
   }
 
-  String _getMonthName(int month) {
-    const months = [
-      '', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-    ];
-    return months[month].toLowerCase();
-  }
+  
 }
 
 
@@ -176,13 +171,13 @@ class _MarkAsPaidBottomSheetState extends State<MarkAsPaidBottomSheet> {
               color: AppColors.blue,
               borderRadius: BorderRadius.circular(5.r),
             ),
-            child: Text(
-              "6 May 2025",
+            child: Text( 
+              "${ DateFormat('yyyy-MM-dd').format(DateTime.now())}",
               style: AppTextStyles.poFont20BlackWh600.copyWith(
                 fontSize: 12.sp,
                 color: AppColors.white,
               ),
-            ),
+            ),  
           ),
            SizedBox(height: 14.h),
           Text(

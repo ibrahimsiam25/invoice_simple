@@ -332,6 +332,7 @@ double totalTax = widget.invoice.invoiceTax?? totals.totalTax;
                   tax:totalTax,
                   currency: widget.invoice.currency,               
 onValuesChanged: (values) {
+  print("Values changed: $values");
   setState(() {
     if (values['subtotal'] != null && values['subtotal'] is double && values['subtotal'] != 0) { 
  

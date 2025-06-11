@@ -395,7 +395,7 @@ if(discount != null){
                       decoration: InputDecoration(
                         isDense: true,
                         border: InputBorder.none,
-                        hintText: "0%",
+                        hintText: "0",
                         hintStyle: AppTextStyles.poFont20BlackWh400.copyWith(
                           fontSize: 12.sp,
                         ),
@@ -444,7 +444,10 @@ if(discount != null){
                     flex: 2,
                     child: TextField(
                       controller: taxableController,
+                   
+
                       decoration: InputDecoration(
+                        prefixText: "%",
                         isDense: true,
                         border: InputBorder.none,
                         hintText: "0%",

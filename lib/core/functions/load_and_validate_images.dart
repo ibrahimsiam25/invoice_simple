@@ -158,7 +158,7 @@ pw.Widget buildImagesRow(Uint8List? signatureBytes, Uint8List? invoiceBytes) {
                 ),
               ),
               pw.SizedBox(height: 5),
-              buildSafeImage(invoiceBytes, 80, 80, 'Invoice'),
+              buildSafeImage(invoiceBytes, 150, 150, 'Invoice'),
             ],
           ),
         ],
